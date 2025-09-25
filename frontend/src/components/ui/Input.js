@@ -62,7 +62,10 @@ const Input = ({
         backdropFilter: 'blur(20px)',
         boxShadow: isFocused 
           ? `0 0 0 3px ${error ? 'rgba(239, 68, 68, 0.2)' : success ? 'rgba(16, 185, 129, 0.2)' : 'rgba(79, 70, 229, 0.2)'}` 
-          : '0 4px 16px rgba(0, 0, 0, 0.1)'
+          : '0 4px 16px rgba(0, 0, 0, 0.1)',
+        '::placeholder': {
+          color: 'rgba(255, 255, 255, 0.6)'
+        }
       },
       filled: {
         ...baseStyles,
@@ -103,7 +106,13 @@ const Input = ({
     paddingLeft: icon ? '3rem' : getSizeStyles().padding.split(' ')[3] || '1rem',
     paddingRight: (type === 'password' || error || success) ? '3rem' : getSizeStyles().padding.split(' ')[1] || '1rem',
     opacity: disabled ? 0.6 : 1,
-    cursor: disabled ? 'not-allowed' : 'text'
+    cursor: disabled ? 'not-allowed' : 'text',
+    // Add placeholder color for glass variant
+    ...(variant === 'glass' && {
+      '::placeholder': {
+        color: 'rgba(255, 255, 255, 0.6)'
+      }
+    })
   };
 
   const handleInputChange = (e) => {

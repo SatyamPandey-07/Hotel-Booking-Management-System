@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Button, Card, Input, Select, Alert, LoadingSpinner, Modal } from './ui';
+import { Button, Card, Input, Alert, LoadingSpinner, Modal } from './ui';
 
 function Rooms() {
   const [rooms, setRooms] = useState([]);
@@ -198,18 +198,25 @@ function Rooms() {
           </div>
           <div style={{ minWidth: '200px' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Filter by Hotel:</label>
-            <Select
+            <select
               value={selectedHotel}
               onChange={(e) => setSelectedHotel(e.target.value)}
-              style={{ width: '100%' }}
+              style={{ 
+                width: '100%', 
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                border: '1px solid #d1d5db',
+                fontSize: '0.875rem',
+                backgroundColor: 'white'
+              }}
             >
               <option value="">🏨 All Hotels</option>
               {hotels.map(hotel => (
                 <option key={hotel.id} value={hotel.id.toString()}>
-                  🏨 {hotel.name} - {hotel.city || 'City'}
+                  🏨 {hotel.name} - {hotel.city || hotel.location || 'Unknown City'}
                 </option>
               ))}
-            </Select>
+            </select>
           </div>
         </div>
         
@@ -218,22 +225,35 @@ function Rooms() {
             <h3>Add New Room</h3>
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-2 gap-md">
-                <Select
-                  label="Hotel *"
-                  name="hotelId"
-                  value={newRoom.hotelId}
-                  onChange={handleInputChange}
-                  required
-                  error={errors.hotelId}
-                  style={{ backgroundColor: errors.hotelId ? '#fef2f2' : 'white' }}
-                >
-                  <option value="">🏨 Select Hotel</option>
-                  {hotels.map(hotel => (
-                    <option key={hotel.id} value={hotel.id}>
-                      🏨 {hotel.name} - {hotel.city || 'City'}
-                    </option>
-                  ))}
-                </Select>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Hotel *</label>
+                  <select
+                    name="hotelId"
+                    value={newRoom.hotelId}
+                    onChange={handleInputChange}
+                    required
+                    style={{ 
+                      width: '100%', 
+                      padding: '0.75rem 1rem',
+                      borderRadius: '8px',
+                      border: errors.hotelId ? '2px solid #ef4444' : '1px solid #d1d5db',
+                      fontSize: '0.875rem',
+                      backgroundColor: errors.hotelId ? '#fef2f2' : 'white'
+                    }}
+                  >
+                    <option value="">🏨 Select Hotel</option>
+                    {hotels.map(hotel => (
+                      <option key={hotel.id} value={hotel.id}>
+                        🏨 {hotel.name} - {hotel.city || hotel.location || 'Unknown City'}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.hotelId && (
+                    <div style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                      {errors.hotelId}
+                    </div>
+                  )}
+                </div>
                 
                 <Input
                   label="Room Number"
@@ -245,21 +265,34 @@ function Rooms() {
                   placeholder="e.g., 101, A-205"
                 />
                 
-                <Select
-                  label="Room Type *"
-                  name="roomType"
-                  value={newRoom.roomType}
-                  onChange={handleInputChange}
-                  required
-                  error={errors.roomType}
-                  style={{ backgroundColor: errors.roomType ? '#fef2f2' : 'white' }}
-                >
-                  {roomTypes.map(type => (
-                    <option key={type.value} value={type.value}>
-                      {type.value === 'SINGLE' ? '🛏️' : type.value === 'DOUBLE' ? '🛏️🛏️' : type.value === 'SUITE' ? '🏠' : type.value === 'DELUXE' ? '✨' : '👨‍👩‍👧‍👦'} {type.label}
-                    </option>
-                  ))}
-                </Select>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Room Type *</label>
+                  <select
+                    name="roomType"
+                    value={newRoom.roomType}
+                    onChange={handleInputChange}
+                    required
+                    style={{ 
+                      width: '100%', 
+                      padding: '0.75rem 1rem',
+                      borderRadius: '8px',
+                      border: errors.roomType ? '2px solid #ef4444' : '1px solid #d1d5db',
+                      fontSize: '0.875rem',
+                      backgroundColor: errors.roomType ? '#fef2f2' : 'white'
+                    }}
+                  >
+                    {roomTypes.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.value === 'SINGLE' ? '🛏️' : type.value === 'DOUBLE' ? '🛏️🛏️' : type.value === 'SUITE' ? '🏠' : type.value === 'DELUXE' ? '✨' : '👨‍👩‍👧‍👦'} {type.label}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.roomType && (
+                    <div style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                      {errors.roomType}
+                    </div>
+                  )}
+                </div>
                 
                 <Input
                   label="Capacity"

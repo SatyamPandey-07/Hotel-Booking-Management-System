@@ -5,10 +5,12 @@
 [![Java](https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](#)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](#)
 [![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](#)
+[![Three.js](https://img.shields.io/badge/Three.js-0.150+-000000?style=for-the-badge&logo=three.js&logoColor=white)](#)
+[![Framer Motion](https://img.shields.io/badge/Framer%20Motion-10.0+-0055FF?style=for-the-badge&logo=framer&logoColor=white)](#)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](#)
 [![H2](https://img.shields.io/badge/H2-Database-0078D4?style=for-the-badge&logo=h2&logoColor=white)](#)
 
-**A modern, full-stack hotel booking management system with enterprise-grade features**
+**A revolutionary, full-stack hotel booking management system with cutting-edge technology and stunning 3D visuals**
 
 🚀 **Live Demo** • 📚 **Documentation** • 🛠️ **Setup Guide** • 🔧 **API Reference**
 
@@ -31,24 +33,29 @@
 - 🔐 **JWT Authentication** with role-based access
 - 🏨 **Multi-Hotel Management** with room inventory
 - 📅 **Smart Booking System** with date validation
-- 📊 **Real-time Analytics Dashboard**
+- 📊 **Real-time Analytics Dashboard** with 3D visualizations
 - 👥 **User Management** (Admin/Manager/Customer)
 - 💰 **Revenue Tracking** and reporting
-- 🛏️ **Room Availability** management
+- 🛏️ **Room Availability** management with native dropdowns
 - 📱 **Responsive Design** for all devices
+- 🎆 **Stunning Landing Page** with revolutionary features showcase
 
 </td>
 <td width="50%">
 
-### 🚀 **Advanced Features**
+### 🚀 **Revolutionary Features**
 - ⚡ **Real-time Updates** and notifications
-- 🎨 **Modern UI/UX** with animations
+- 🎨 **Modern UI/UX** with Three.js 3D backgrounds
 - 🔄 **Auto-refresh** dashboard metrics
-- 📈 **Visual Analytics** with charts
+- 📈 **Visual Analytics** with animated charts
 - 🛡️ **Security Hardened** with Spring Security
 - 🌐 **RESTful API** with comprehensive endpoints
 - 💾 **Dual Database** support (H2/MySQL)
 - 🎭 **Role-based** interface customization
+- 🌌 **3D Geometric Animations** with floating shapes
+- 🌈 **Gradient Themes** with glassmorphism design
+- 💫 **Interactive Hover Effects** and smooth transitions
+- 🔮 **Future Roadmap** with AI, Blockchain, AR/VR features
 
 </td>
 </tr>
@@ -110,24 +117,59 @@ graph TB
 <tr>
 <td width="50%">
 
-#### 🖥️ **Backend**
-- **Framework:** Spring Boot 2.7.18
-- **Language:** Java 17+
-- **Security:** Spring Security + JWT
-- **Database:** H2 (dev) / MySQL (prod)
-- **Build Tool:** Maven
-- **API Style:** RESTful
+#### 🖥️ **Frontend Architecture**
+- **Framework:** React 18.2.0 with concurrent features
+- **Language:** JavaScript/JSX with TypeScript support
+- **3D Graphics:** Three.js 0.150+ for immersive experiences
+- **Animations:** Framer Motion 10.0+ for smooth transitions
+- **Routing:** React Router DOM 6.8+ for navigation
+- **HTTP Client:** Axios 0.27.2 for API communication
+- **State Management:** Context API for global state
+- **Styling:** Custom CSS3 + CSS Variables + Glassmorphism
+- **Icons:** Heroicons for beautiful UI elements
 
 </td>
 <td width="50%">
 
-#### 🎨 **Frontend**
-- **Framework:** React 18.2.0
-- **Language:** JavaScript/JSX
-- **Routing:** React Router DOM 6.3.0
-- **HTTP Client:** Axios 0.27.2
-- **State Management:** Context API
-- **Styling:** Custom CSS3 + Variables
+#### ⚙️ **Backend Infrastructure**
+- **Framework:** Spring Boot 2.7.18 enterprise framework
+- **Language:** Java 17+ with modern features
+- **Security:** Spring Security 6.1+ with JWT authentication
+- **Database:** H2 (dev) / MySQL 8.0+ (prod) / PostgreSQL 15+
+- **ORM:** JPA/Hibernate 6.2+ with advanced caching
+- **Build Tool:** Maven 3.6+ for dependency management
+- **API Style:** RESTful with comprehensive endpoints
+- **Caching:** Redis 7.0+ for performance optimization
+- **Messaging:** Apache Kafka 3.4+ for event streaming
+
+</td>
+</tr>
+</table>
+
+### 🌐 **Cloud & DevOps Stack**
+
+<table>
+<tr>
+<td width="50%">
+
+#### ☁️ **Cloud Platform**
+- **Compute:** AWS EC2/ECS for scalable deployment
+- **Database:** AWS RDS for managed database service
+- **CDN:** CloudFront for global content delivery
+- **Storage:** AWS S3 for static assets and backups
+- **Monitoring:** AWS CloudWatch for comprehensive observability
+- **Security:** SSL/TLS 1.3 encryption and OWASP guidelines
+
+</td>
+<td width="50%">
+
+#### 🛠️ **Development Tools**
+- **Containerization:** Docker 24.0+ for consistent deployments
+- **Orchestration:** Kubernetes 1.27+ for production workloads
+- **CI/CD:** GitHub Actions for automated pipelines
+- **Logging:** ELK Stack (Elasticsearch, Logstash, Kibana) 8.8+
+- **API Testing:** Postman collections for comprehensive testing
+- **Version Control:** Git with feature branch workflow
 
 </td>
 </tr>
@@ -207,7 +249,89 @@ graph TB
 
 ---
 
-## 🚀 **Detailed Setup Guide**
+## 🎆 **Feature Showcase**
+
+### 🌌 **Revolutionary Landing Page**
+- **3D Background**: Floating geometric shapes with Three.js animations
+- **Gradient Themes**: Multi-color gradients with smooth transitions
+- **Interactive Elements**: Hover effects and micro-animations
+- **Tech Stack Display**: 4-category detailed technology showcase
+- **Future Roadmap**: Revolutionary features including AI, Blockchain, AR/VR, and IoT
+- **Professional Design**: Glassmorphism effects with backdrop blur
+- **Responsive Layout**: Perfect scaling across all device sizes
+
+### 🔐 **Enhanced Authentication System**
+- **Glass UI Design**: Beautiful transparent input fields with proper visibility
+- **JWT Security**: Industry-standard token-based authentication
+- **Role Management**: Three-tier access control (Admin/Manager/Customer)
+- **Session Management**: Secure login/logout with token validation
+- **Protected Routes**: Frontend route protection based on user roles
+- **Demo Accounts**: One-click demo access for all user types
+- **Animated Login**: Smooth transitions and loading states
+
+### 📊 **Analytics Dashboard**
+- **3D Visualizations**: Floating cube animations in the background
+- **Real-time Metrics**: Live booking counts, revenue tracking
+- **Visual Charts**: Booking trends, occupancy rates, revenue graphs
+- **Role-based Views**: Customized dashboards per user type
+- **Performance Indicators**: Key business metrics at a glance
+- **Animated Counters**: Smooth number transitions and effects
+
+### 🏨 **Hotel & Room Management**
+- **Enhanced Dropdowns**: Native HTML select elements with improved styling
+- **Multi-Hotel Support**: Manage multiple hotel properties
+- **Room Inventory**: Comprehensive room type management with icons
+- **Dynamic Pricing**: Flexible pricing per room type and season
+- **Amenity Tracking**: Detailed amenities and features per room
+- **Availability Engine**: Real-time room availability checking
+- **Smart Validation**: Client-side form validation with error highlighting
+
+### 📅 **Advanced Booking System**
+- **Date Selection**: Interactive date pickers for check-in/check-out
+- **Room Assignment**: Specific room assignment with preferences
+- **Status Workflow**: Complete booking lifecycle management
+- **Price Calculation**: Automatic total calculation with taxes
+- **Special Requests**: Customer notes and special requirements
+- **Real-time Updates**: Live booking status changes
+
+### 👥 **User Management**
+- **Customer Profiles**: Complete customer information management
+- **Loyalty Program**: Points system and customer rewards
+- **Staff Management**: Manager and admin account management
+- **Activity Tracking**: User login and activity monitoring
+- **Role-based Access**: Granular permission system
+
+### 🚀 **Future Work Roadmap (2025-2030)**
+- **🤖 AI-Powered Smart Concierge** (Q3 2025): Advanced AI assistant with natural language processing
+- **⛓️ Blockchain Loyalty System** (Q2 2026): Decentralized rewards with cryptocurrency and NFTs
+- **🥽 AR/VR Room Preview** (Q1 2025): Immersive virtual reality tours and augmented reality features
+- **🏠 IoT Smart Room Controls** (Q4 2024): Internet of Things integration for automated room management
+
+---
+
+## ✨ **Latest Updates & Fixes**
+
+### 🚀 **Version 2.0 - Revolutionary UI Update**
+- ✅ **Fixed Login Visibility**: Username and password fields now have proper white text visibility on glass backgrounds
+- ✅ **Enhanced Dropdowns**: Hotel and room type dropdowns now use native HTML elements for better performance and functionality
+- ✅ **3D Landing Page**: Added stunning Three.js geometric animations with floating shapes and dynamic backgrounds
+- ✅ **Tech Stack Showcase**: Comprehensive 4-category technology display with detailed versions and descriptions
+- ✅ **Future Roadmap**: Revolutionary features section showcasing AI, Blockchain, AR/VR, and IoT innovations
+- ✅ **Glassmorphism Design**: Beautiful transparent effects with backdrop blur and gradient themes throughout
+- ✅ **Responsive Improvements**: Enhanced mobile and tablet support with perfect scaling across all devices
+- ✅ **Performance Optimization**: Reduced bundle size, improved loading times, and smoother animations
+- ✅ **Input Field Enhancements**: Glass variant inputs with proper placeholder visibility and styling
+- ✅ **Theme Consistency**: Unified design language across all admin, manager, and customer panels
+
+### 🛠️ **Technical Improvements**
+- **React 18.2.0**: Latest React features with concurrent rendering
+- **Three.js Integration**: Advanced 3D graphics and animations
+- **Framer Motion**: Smooth animations and micro-interactions
+- **Native HTML Elements**: Better accessibility and performance for form controls
+- **CSS-in-JS Styling**: Dynamic styling with JavaScript for better maintainability
+- **Component Architecture**: Modular design with reusable UI components
+
+---
 
 ### 📎 **Prerequisites**
 

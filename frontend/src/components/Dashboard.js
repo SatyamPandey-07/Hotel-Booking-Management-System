@@ -1,20 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useSpring, animated } from '@react-spring/web';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
-import { Card, LoadingSpinner, Alert } from './ui';
+import ThemeWrapper, { ThemedCard, ThemedHeader } from './ThemeWrapper';
+import { LoadingSpinner, Alert, Card } from './ui';
 import {
   ChartBarIcon,
   CurrencyDollarIcon,
   UserGroupIcon,
   BuildingOfficeIcon,
   CalendarDaysIcon,
+  ClockIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
-  ClockIcon,
-  CheckCircleIcon,
-  XCircleIcon,
   StarIcon
 } from '@heroicons/react/24/outline';
 import * as THREE from 'three';

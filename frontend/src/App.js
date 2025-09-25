@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import ThemeWrapper from './components/ThemeWrapper';
 import Customers from './components/Customers';
 import Hotels from './components/Hotels';
 import Bookings from './components/Bookings';
@@ -191,80 +192,82 @@ function AppContent() {
   }
   
   return (
-    <div className="App">
-      <Navigation />
-      
-      <div className="container">
-        <Routes>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          
-          {/* Common routes for all authenticated users */}
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          
-          {/* Admin-only routes */}
-          <Route path="/users" element={
-            <ProtectedRoute allowedRoles={['ADMIN']}>
-              <div style={{ padding: 'var(--spacing-xl)', textAlign: 'center' }}>
-                <h2>👤 User Management</h2>
-                <p>Admin-only feature: Manage all system users</p>
-                <p style={{ color: 'var(--gray-600)' }}>This feature is coming soon...</p>
-              </div>
-            </ProtectedRoute>
-          } />
-          
-          {/* Admin and Manager routes */}
-          <Route path="/customers" element={
-            <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
-              <Customers />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/rooms" element={
-            <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
-              <Rooms />
-            </ProtectedRoute>
-          } />
-          
-          {/* Different booking views based on role */}
-          <Route path="/bookings" element={
-            <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
-              <Bookings />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/my-bookings" element={
-            <ProtectedRoute allowedRoles={['CUSTOMER']}>
-              <CustomerBookings />
-            </ProtectedRoute>
-          } />
-          
-          {/* Hotels - accessible to all but with different views */}
-          <Route path="/hotels" element={
-            <ProtectedRoute>
-              <Hotels />
-            </ProtectedRoute>
-          } />
-          
-          {/* Customer-only routes */}
-          <Route path="/profile" element={
-            <ProtectedRoute allowedRoles={['CUSTOMER']}>
-              <div style={{ padding: 'var(--spacing-xl)', textAlign: 'center' }}>
-                <h2>👤 My Profile</h2>
-                <p>Customer profile management</p>
-                <p style={{ color: 'var(--gray-600)' }}>This feature is coming soon...</p>
-              </div>
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/home" element={<Home />} />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
+    <ThemeWrapper>
+      <div className="App">
+        <Navigation />
+        
+        <div className="container">
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            
+            {/* Common routes for all authenticated users */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            
+            {/* Admin-only routes */}
+            <Route path="/users" element={
+              <ProtectedRoute allowedRoles={['ADMIN']}>
+                <div style={{ padding: 'var(--spacing-xl)', textAlign: 'center' }}>
+                  <h2>👤 User Management</h2>
+                  <p>Admin-only feature: Manage all system users</p>
+                  <p style={{ color: 'var(--gray-600)' }}>This feature is coming soon...</p>
+                </div>
+              </ProtectedRoute>
+            } />
+            
+            {/* Admin and Manager routes */}
+            <Route path="/customers" element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
+                <Customers />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/rooms" element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
+                <Rooms />
+              </ProtectedRoute>
+            } />
+            
+            {/* Different booking views based on role */}
+            <Route path="/bookings" element={
+              <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
+                <Bookings />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/my-bookings" element={
+              <ProtectedRoute allowedRoles={['CUSTOMER']}>
+                <CustomerBookings />
+              </ProtectedRoute>
+            } />
+            
+            {/* Hotels - accessible to all but with different views */}
+            <Route path="/hotels" element={
+              <ProtectedRoute>
+                <Hotels />
+              </ProtectedRoute>
+            } />
+            
+            {/* Customer-only routes */}
+            <Route path="/profile" element={
+              <ProtectedRoute allowedRoles={['CUSTOMER']}>
+                <div style={{ padding: 'var(--spacing-xl)', textAlign: 'center' }}>
+                  <h2>👤 My Profile</h2>
+                  <p>Customer profile management</p>
+                  <p style={{ color: 'var(--gray-600)' }}>This feature is coming soon...</p>
+                </div>
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/home" element={<Home />} />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </Routes>
+        </div>
       </div>
-    </div>
+    </ThemeWrapper>
   );
 }
 

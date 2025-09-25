@@ -109,55 +109,43 @@ function LandingPage() {
 
   const techStack = [
     {
-      category: 'Frontend Architecture',
+      category: 'Frontend',
       icon: <DevicePhoneMobileIcon className="w-8 h-8" />,
       color: 'from-blue-500 to-purple-600',
       technologies: [
-        { name: 'React 18', description: 'Modern UI framework with concurrent features', version: 'v18.2.0' },
-        { name: 'TypeScript', description: 'Type-safe development with enhanced IDE support', version: 'v5.0+' },
-        { name: 'Tailwind CSS', description: 'Utility-first CSS framework for rapid UI development', version: 'v3.3+' },
-        { name: 'Framer Motion', description: 'Production-ready motion library for React', version: 'v10.0+' },
-        { name: 'Three.js', description: '3D graphics library for immersive experiences', version: 'v0.150+' },
-        { name: 'React Router', description: 'Declarative routing for React applications', version: 'v6.8+' }
+        { name: 'React 18', description: 'Modern UI framework' },
+        { name: 'TypeScript', description: 'Type-safe development' },
+        { name: 'Tailwind CSS', description: 'Utility-first styling' }
       ]
     },
     {
-      category: 'Backend Infrastructure',
+      category: 'Backend',
       icon: <CpuChipIcon className="w-8 h-8" />,
       color: 'from-green-500 to-teal-600',
       technologies: [
-        { name: 'Spring Boot', description: 'Enterprise Java framework with auto-configuration', version: 'v3.1+' },
-        { name: 'Spring Security', description: 'Comprehensive security framework for authentication', version: 'v6.1+' },
-        { name: 'JPA/Hibernate', description: 'Object-relational mapping with advanced caching', version: 'v6.2+' },
-        { name: 'PostgreSQL', description: 'Advanced open-source relational database', version: 'v15+' },
-        { name: 'Redis', description: 'In-memory data structure store for caching', version: 'v7.0+' },
-        { name: 'Apache Kafka', description: 'Distributed event streaming platform', version: 'v3.4+' }
+        { name: 'Spring Boot', description: 'Enterprise Java framework' },
+        { name: 'PostgreSQL', description: 'Robust database' },
+        { name: 'Redis', description: 'High-performance caching' }
       ]
     },
     {
-      category: 'Cloud & DevOps',
+      category: 'Cloud',
       icon: <CloudIcon className="w-8 h-8" />,
       color: 'from-orange-500 to-red-600',
       technologies: [
-        { name: 'AWS EC2/ECS', description: 'Scalable cloud computing and container orchestration', version: 'Latest' },
-        { name: 'Docker', description: 'Containerization platform for consistent deployments', version: 'v24.0+' },
-        { name: 'Kubernetes', description: 'Container orchestration for production workloads', version: 'v1.27+' },
-        { name: 'AWS RDS', description: 'Managed relational database service', version: 'Latest' },
-        { name: 'CloudFront CDN', description: 'Global content delivery network', version: 'Latest' },
-        { name: 'GitHub Actions', description: 'CI/CD pipeline automation', version: 'Latest' }
+        { name: 'AWS EC2', description: 'Scalable computing' },
+        { name: 'Docker', description: 'Containerization' },
+        { name: 'Kubernetes', description: 'Orchestration' }
       ]
     },
     {
-      category: 'Security & Monitoring',
+      category: 'Security',
       icon: <ShieldCheckIcon className="w-8 h-8" />,
       color: 'from-purple-500 to-pink-600',
       technologies: [
-        { name: 'JWT Authentication', description: 'Stateless token-based authentication system', version: 'v9.0+' },
-        { name: 'OAuth 2.0', description: 'Industry-standard authorization framework', version: 'v2.1' },
-        { name: 'SSL/TLS Encryption', description: 'End-to-end data encryption in transit', version: 'v1.3' },
-        { name: 'OWASP Guidelines', description: 'Security best practices implementation', version: 'v4.0' },
-        { name: 'AWS CloudWatch', description: 'Comprehensive monitoring and observability', version: 'Latest' },
-        { name: 'ELK Stack', description: 'Elasticsearch, Logstash, and Kibana for logging', version: 'v8.8+' }
+        { name: 'JWT Auth', description: 'Secure authentication' },
+        { name: 'SSL/TLS', description: 'Encrypted communication' },
+        { name: 'OWASP', description: 'Security best practices' }
       ]
     }
   ];
@@ -392,14 +380,7 @@ function LandingPage() {
             </p>
           </motion.div>
           
-          <div style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-            gap: '2rem',
-            '@media (min-width: 1024px)': {
-              gridTemplateColumns: 'repeat(4, 1fr)'
-            }
-          }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
             {techStack.map((stack, index) => (
               <motion.div
                 key={index}
@@ -436,7 +417,7 @@ function LandingPage() {
                   </h3>
                 </div>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', maxHeight: '300px', overflowY: 'auto' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {stack.technologies.map((tech, techIndex) => (
                     <motion.div
                       key={techIndex}
@@ -446,9 +427,9 @@ function LandingPage() {
                       style={{
                         display: 'flex',
                         alignItems: 'center',
-                        padding: '0.5rem',
+                        padding: '0.75rem',
                         background: 'rgba(255, 255, 255, 0.05)',
-                        borderRadius: '8px',
+                        borderRadius: '10px',
                         border: '1px solid rgba(255, 255, 255, 0.1)'
                       }}
                     >
@@ -457,200 +438,26 @@ function LandingPage() {
                         height: '8px',
                         borderRadius: '50%',
                         background: `linear-gradient(135deg, ${stack.color.split(' ')[1]}, ${stack.color.split(' ')[3]})`,
-                        marginRight: '0.5rem',
+                        marginRight: '0.75rem',
                         flexShrink: 0
                       }} />
                       <div>
                         <div style={{
                           color: 'white',
                           fontWeight: '600',
-                          fontSize: '0.85rem'
+                          fontSize: '0.95rem'
                         }}>
-                          {tech.name} 
-                          {tech.version && <span style={{ color: 'rgba(255, 255, 255, 0.5)', fontSize: '0.75rem' }}>({tech.version})</span>}
+                          {tech.name}
                         </div>
                         <div style={{
                           color: 'rgba(255, 255, 255, 0.6)',
-                          fontSize: '0.75rem',
-                          marginTop: '0.2rem'
+                          fontSize: '0.85rem',
+                          marginTop: '0.25rem'
                         }}>
                           {tech.description}
                         </div>
                       </div>
                     </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Future Work Section */}
-      <section style={{ padding: '6rem 0', background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%)', position: 'relative' }}>
-        <div className="container">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            style={{ textAlign: 'center', marginBottom: '4rem' }}
-          >
-            <h2 style={{
-              fontSize: 'clamp(2.5rem, 5vw, 4rem)',
-              fontWeight: '900',
-              background: 'linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 25%, #45b7d1 50%, #96ceb4 75%, #ffeaa7 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              marginBottom: '1.5rem'
-            }}>
-              🚀 Future Roadmap 2025-2030
-            </h2>
-            
-            <p style={{
-              fontSize: '1.3rem',
-              color: 'rgba(255, 255, 255, 0.8)',
-              maxWidth: '700px',
-              margin: '0 auto'
-            }}>
-              Revolutionary technologies that will redefine hospitality and travel experiences
-            </p>
-          </motion.div>
-          
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
-            {[
-              {
-                title: 'AI-Powered Smart Concierge',
-                icon: '🤖',
-                description: 'Advanced AI assistant providing 24/7 personalized guest services with natural language processing.',
-                features: ['Voice Recognition', 'Predictive Recommendations', 'Multi-language Support'],
-                status: 'In Development',
-                eta: 'Q3 2025',
-                color: 'from-blue-500 to-cyan-600'
-              },
-              {
-                title: 'Blockchain Loyalty System',
-                icon: '⛓️',
-                description: 'Decentralized loyalty program with cryptocurrency rewards and NFT collectibles.',
-                features: ['Smart Contracts', 'Token Rewards', 'NFT Badges'],
-                status: 'Research Phase',
-                eta: 'Q2 2026',
-                color: 'from-purple-500 to-pink-600'
-              },
-              {
-                title: 'AR/VR Room Preview',
-                icon: '🥽',
-                description: 'Immersive virtual reality room tours and augmented reality booking features.',
-                features: ['360° Virtual Tours', 'AR Room Customization', 'VR Hotel Exploration'],
-                status: 'Beta Testing',
-                eta: 'Q1 2025',
-                color: 'from-green-500 to-teal-600'
-              },
-              {
-                title: 'IoT Smart Room Controls',
-                icon: '🏠',
-                description: 'Internet of Things integration for automated room controls and energy optimization.',
-                features: ['Smart Lighting', 'Climate Control', 'Energy Analytics'],
-                status: 'Pilot Program',
-                eta: 'Q4 2024',
-                color: 'from-orange-500 to-red-600'
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.2 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05, y: -10 }}
-                style={{
-                  background: `linear-gradient(135deg, ${feature.color.split(' ')[1]}, ${feature.color.split(' ')[3]})`,
-                  borderRadius: '20px',
-                  padding: '2rem',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  backdropFilter: 'blur(20px)',
-                  position: 'relative'
-                }}
-              >
-                <div style={{
-                  position: 'absolute',
-                  top: '1rem',
-                  right: '1rem',
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  padding: '0.4rem 0.8rem',
-                  borderRadius: '15px',
-                  fontSize: '0.7rem',
-                  fontWeight: '700',
-                  color: 'white'
-                }}>
-                  {feature.status}
-                </div>
-                
-                <div style={{
-                  fontSize: '3rem',
-                  marginBottom: '1rem',
-                  textAlign: 'center'
-                }}>
-                  {feature.icon}
-                </div>
-                
-                <h3 style={{
-                  color: 'white',
-                  fontSize: '1.3rem',
-                  fontWeight: '700',
-                  marginBottom: '1rem',
-                  textAlign: 'center'
-                }}>
-                  {feature.title}
-                </h3>
-                
-                <p style={{
-                  color: 'rgba(255, 255, 255, 0.9)',
-                  fontSize: '0.95rem',
-                  lineHeight: '1.6',
-                  marginBottom: '1.5rem',
-                  textAlign: 'center'
-                }}>
-                  {feature.description}
-                </p>
-                
-                <div style={{
-                  textAlign: 'center',
-                  marginBottom: '1.5rem'
-                }}>
-                  <div style={{
-                    background: 'rgba(255, 255, 255, 0.15)',
-                    padding: '0.5rem 1rem',
-                    borderRadius: '15px',
-                    fontSize: '0.8rem',
-                    fontWeight: '600',
-                    color: 'white',
-                    display: 'inline-block'
-                  }}>
-                    📅 Expected: {feature.eta}
-                  </div>
-                </div>
-                
-                <div style={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  gap: '0.5rem', 
-                  justifyContent: 'center'
-                }}>
-                  {feature.features.map((featureItem, featureIndex) => (
-                    <span
-                      key={featureIndex}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.15)',
-                        padding: '0.3rem 0.6rem',
-                        borderRadius: '10px',
-                        fontSize: '0.7rem',
-                        fontWeight: '600',
-                        color: 'white'
-                      }}
-                    >
-                      {featureItem}
-                    </span>
                   ))}
                 </div>
               </motion.div>

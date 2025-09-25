@@ -1,18 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
-import { Button, Card, Input, Alert } from './ui';
-import { 
-  UserIcon, 
-  LockClosedIcon, 
-  ShieldCheckIcon,
-  SparklesIcon,
-  EyeIcon,
-  CommandLineIcon
-} from '@heroicons/react/24/outline';
+import { Button, Input, Alert } from './ui';
+import { UserIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 import * as THREE from 'three';
 
-// 3D Background for Login
+// 3D Background matching landing page theme
 function LoginBackground() {
   const mountRef = useRef(null);
   
@@ -27,34 +20,44 @@ function LoginBackground() {
     renderer.setClearColor(0x000000, 0);
     mountRef.current.appendChild(renderer.domElement);
     
-    // Create floating particles
-    const particleGeometry = new THREE.BufferGeometry();
-    const particleCount = 200;
-    const positions = new Float32Array(particleCount * 3);
+    // Create floating geometric shapes (matching landing page)
+    const geometries = [
+      new THREE.TetrahedronGeometry(1, 0),
+      new THREE.OctahedronGeometry(1, 0),
+      new THREE.IcosahedronGeometry(1, 0)
+    ];
     
-    for (let i = 0; i < particleCount * 3; i++) {
-      positions[i] = (Math.random() - 0.5) * 20;
-    }
-    
-    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    
-    const particleMaterial = new THREE.PointsMaterial({
-      color: 0x4f46e5,
-      size: 0.1,
+    const material = new THREE.MeshBasicMaterial({ 
+      color: 0x4f46e5, 
+      wireframe: true,
       transparent: true,
-      opacity: 0.6
+      opacity: 0.3
     });
     
-    const particles = new THREE.Points(particleGeometry, particleMaterial);
-    scene.add(particles);
+    const shapes = [];
+    for (let i = 0; i < 15; i++) {
+      const geometry = geometries[Math.floor(Math.random() * geometries.length)];
+      const mesh = new THREE.Mesh(geometry, material);
+      
+      mesh.position.set(
+        (Math.random() - 0.5) * 20,
+        (Math.random() - 0.5) * 20,
+        (Math.random() - 0.5) * 20
+      );
+      
+      shapes.push(mesh);
+      scene.add(mesh);
+    }
     
     camera.position.z = 10;
     
     const animate = () => {
       requestAnimationFrame(animate);
       
-      particles.rotation.x += 0.001;
-      particles.rotation.y += 0.002;
+      shapes.forEach((shape, index) => {
+        shape.rotation.x += 0.005 + index * 0.001;
+        shape.rotation.y += 0.005 + index * 0.001;
+      });
       
       renderer.render(scene, camera);
     };
@@ -102,19 +105,8 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState(null);
   const [errors, setErrors] = useState({});
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [showDemoAccounts, setShowDemoAccounts] = useState(false);
   
   const { login } = useAuth();
-
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -168,13 +160,12 @@ function Login() {
 
   const fillDemoCredentials = (username, password) => {
     setCredentials({ username, password });
-    setShowDemoAccounts(false);
   };
 
   const demoAccounts = [
-    { role: 'Admin', username: 'admin', password: 'password', color: '#ef4444', icon: <ShieldCheckIcon className="w-5 h-5" /> },
-    { role: 'Manager', username: 'manager1', password: 'password', color: '#f59e0b', icon: <CommandLineIcon className="w-5 h-5" /> },
-    { role: 'Customer', username: 'customer1', password: 'password123', color: '#10b981', icon: <UserIcon className="w-5 h-5" /> }
+    { role: 'Admin', username: 'admin', password: 'password', emoji: '👑', color: '#ef4444' },
+    { role: 'Manager', username: 'manager1', password: 'password', emoji: '👨‍💼', color: '#f59e0b' },
+    { role: 'Customer', username: 'customer1', password: 'password123', emoji: '👤', color: '#10b981' }
   ];
 
   return (
@@ -187,303 +178,237 @@ function Login() {
       position: 'relative',
       overflow: 'hidden'
     }}>
+      {/* Add CSS for better placeholder visibility */}
+      <style>
+        {`
+          .glass-input input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+            opacity: 1 !important;
+          }
+          .glass-input input::-webkit-input-placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+            opacity: 1 !important;
+          }
+          .glass-input input::-moz-placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+            opacity: 1 !important;
+          }
+          .glass-input input:-ms-input-placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+            opacity: 1 !important;
+          }
+          .glass-input input {
+            color: white !important;
+          }
+        `}
+      </style>
       <LoginBackground />
       
-      {/* Animated mouse follower */}
       <motion.div
+        initial={{ opacity: 0, y: 50, scale: 0.9 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.8, ease: 'easeOut' }}
         style={{
-          position: 'fixed',
-          top: mousePosition.y - 15,
-          left: mousePosition.x - 15,
-          width: 30,
-          height: 30,
-          borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(79, 70, 229, 0.6) 0%, transparent 70%)',
-          pointerEvents: 'none',
-          zIndex: 9999,
-          mixBlendMode: 'screen'
+          background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(6, 182, 212, 0.15))',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '30px',
+          padding: '3rem',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)',
+          width: '100%',
+          maxWidth: '420px',
+          position: 'relative',
+          overflow: 'hidden'
         }}
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.5, 1, 0.5]
-        }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: 'easeInOut'
-        }}
-      />
-      
-      <div style={{ width: '100%', maxWidth: '450px', padding: '2rem', position: 'relative', zIndex: 1 }}>
+      >
+        {/* Animated background pattern */}
         <motion.div
-          initial={{ opacity: 0, y: 50, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-        >
-          <Card variant="glass" elevation="high" glow>
-            {/* Header */}
-            <motion.div 
-              style={{ textAlign: 'center', marginBottom: '2rem' }}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              <motion.div
-                style={{
-                  fontSize: '3rem',
-                  marginBottom: '1rem'
-                }}
-                animate={{
-                  rotateY: [0, 360]
-                }}
-                transition={{
-                  duration: 10,
-                  repeat: Infinity,
-                  ease: 'linear'
-                }}
-              >
-                🏨
-              </motion.div>
-              <h1 style={{ 
-                margin: 0, 
-                background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
+          style={{
+            position: 'absolute',
+            top: '-50%',
+            left: '-50%',
+            width: '200%',
+            height: '200%',
+            background: 'conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent)',
+            pointerEvents: 'none'
+          }}
+          animate={{
+            rotate: [0, 360]
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: 'linear'
+          }}
+        />
+        
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {/* Header */}
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            style={{ textAlign: 'center', marginBottom: '2.5rem' }}
+          >
+            <motion.h1
+              style={{
+                fontSize: '2.5rem',
+                fontWeight: '900',
+                background: 'linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 25%, #45b7d1 50%, #96ceb4 75%, #ffeaa7 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
-                fontSize: '2rem',
-                fontWeight: '800'
-              }}>
-                Hotel Booking
-              </h1>
-              <motion.p 
-                style={{ 
-                  margin: '0.5rem 0 0 0', 
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  fontSize: '1rem'
-                }}
-                animate={{ opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                Sign in to access your account
-              </motion.p>
-            </motion.div>
-            
-            {/* Alert */}
-            <AnimatePresence>
-              {alert && (
-                <motion.div
-                  initial={{ opacity: 0, y: -20, height: 0 }}
-                  animate={{ opacity: 1, y: 0, height: 'auto' }}
-                  exit={{ opacity: 0, y: -20, height: 0 }}
-                  style={{ marginBottom: '1.5rem' }}
-                >
-                  <Alert type={alert.type} onClose={() => setAlert(null)}>
-                    {alert.message}
-                  </Alert>
-                </motion.div>
-              )}
-            </AnimatePresence>
-            
-            {/* Login Form */}
-            <motion.form 
-              onSubmit={handleSubmit}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
+                marginBottom: '0.5rem',
+                textShadow: '0 0 30px rgba(255, 255, 255, 0.5)'
+              }}
+              animate={{
+                backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: 'linear'
+              }}
             >
+              🏨 Welcome Back
+            </motion.h1>
+            <p style={{
+              color: 'rgba(255, 255, 255, 0.8)',
+              fontSize: '1.1rem',
+              margin: 0
+            }}>
+              Sign in to your hotel booking account
+            </p>
+          </motion.div>
+
+          {/* Alert */}
+          {alert && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              style={{ marginBottom: '1.5rem' }}
+            >
+              <Alert type={alert.type} onClose={() => setAlert(null)}>
+                {alert.message}
+              </Alert>
+            </motion.div>
+          )}
+
+          {/* Login Form */}
+          <motion.form
+            onSubmit={handleSubmit}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            style={{ marginBottom: '2rem' }}
+          >
+            <div style={{ marginBottom: '1.5rem' }}>
               <Input
                 label="Username"
+                type="text"
                 name="username"
                 value={credentials.username}
                 onChange={handleInputChange}
+                placeholder="Enter your username"
                 required
                 error={errors.username}
-                placeholder="Enter your username"
-                variant="glass"
-                floating
                 icon={<UserIcon className="w-5 h-5" />}
-                glow
+                variant="glass"
+                glow={true}
+                className="glass-input"
               />
-              
+            </div>
+            
+            <div style={{ marginBottom: '2rem' }}>
               <Input
                 label="Password"
                 type="password"
                 name="password"
                 value={credentials.password}
                 onChange={handleInputChange}
+                placeholder="Enter your password"
                 required
                 error={errors.password}
-                placeholder="Enter your password"
-                variant="glass"
-                floating
                 icon={<LockClosedIcon className="w-5 h-5" />}
-                glow
+                variant="glass"
+                glow={true}
+                className="glass-input"
               />
-              
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Button 
-                  type="submit" 
-                  loading={loading}
-                  style={{ 
-                    width: '100%', 
-                    marginTop: '2rem',
-                    background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
-                    padding: '1rem',
-                    fontSize: '1rem',
-                    fontWeight: '700'
-                  }}
-                  glow
-                >
-                  {loading ? (
-                    <>
-                      <motion.div
-                        style={{
-                          width: '20px',
-                          height: '20px',
-                          border: '2px solid transparent',
-                          borderTop: '2px solid white',
-                          borderRadius: '50%',
-                          marginRight: '0.5rem'
-                        }}
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-                      />
-                      Signing in...
-                    </>
-                  ) : (
-                    <>
-                      <SparklesIcon className="w-5 h-5 mr-2" />
-                      Sign In
-                    </>
-                  )}
-                </Button>
-              </motion.div>
-            </motion.form>
+            </div>
             
-            {/* Demo Accounts */}
-            <motion.div 
-              style={{ marginTop: '2rem' }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+            <Button
+              type="submit"
+              loading={loading}
+              style={{
+                width: '100%',
+                background: 'linear-gradient(135deg, #4f46e5, #06b6d4)',
+                border: 'none',
+                padding: '1rem',
+                fontSize: '1.1rem',
+                fontWeight: '700',
+                borderRadius: '15px',
+                color: 'white',
+                textTransform: 'uppercase',
+                letterSpacing: '1px'
+              }}
             >
-              <motion.button
-                type="button"
-                onClick={() => setShowDemoAccounts(!showDemoAccounts)}
-                style={{
-                  width: '100%',
-                  padding: '1rem',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: '12px',
-                  color: 'white',
-                  fontSize: '0.875rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  backdropFilter: 'blur(10px)',
-                  transition: 'all 0.3s ease'
-                }}
-                whileHover={{
-                  background: 'rgba(255, 255, 255, 0.15)',
-                  scale: 1.02
-                }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                  <EyeIcon className="w-5 h-5" />
-                  {showDemoAccounts ? 'Hide' : 'Show'} Demo Accounts
-                </div>
-              </motion.button>
-              
-              <AnimatePresence>
-                {showDemoAccounts && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0, y: -20 }}
-                    animate={{ opacity: 1, height: 'auto', y: 0 }}
-                    exit={{ opacity: 0, height: 0, y: -20 }}
-                    transition={{ duration: 0.4, ease: 'easeOut' }}
-                    style={{
-                      marginTop: '1rem',
-                      padding: '1.5rem',
-                      background: 'rgba(255, 255, 255, 0.05)',
-                      borderRadius: '12px',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      backdropFilter: 'blur(20px)'
-                    }}
-                  >
-                    <h4 style={{ 
-                      margin: '0 0 1rem 0', 
-                      color: 'white',
-                      fontSize: '0.875rem',
-                      fontWeight: '600',
-                      textAlign: 'center'
-                    }}>
-                      Demo Accounts
-                    </h4>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                      {demoAccounts.map((account, index) => (
-                        <motion.button
-                          key={account.role}
-                          type="button"
-                          onClick={() => fillDemoCredentials(account.username, account.password)}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            padding: '0.75rem 1rem',
-                            background: 'rgba(255, 255, 255, 0.1)',
-                            border: `1px solid ${account.color}30`,
-                            borderRadius: '8px',
-                            color: 'white',
-                            fontSize: '0.8rem',
-                            cursor: 'pointer',
-                            transition: 'all 0.3s ease'
-                          }}
-                          initial={{ opacity: 0, x: -20 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          transition={{ delay: index * 0.1 }}
-                          whileHover={{
-                            background: `${account.color}20`,
-                            borderColor: `${account.color}60`,
-                            scale: 1.02
-                          }}
-                          whileTap={{ scale: 0.98 }}
-                        >
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <div style={{ color: account.color }}>
-                              {account.icon}
-                            </div>
-                            <div>
-                              <div style={{ fontWeight: '600' }}>{account.role}</div>
-                              <div style={{ fontSize: '0.7rem', opacity: 0.7 }}>
-                                {account.username}
-                              </div>
-                            </div>
-                          </div>
-                          <motion.div
-                            style={{
-                              padding: '0.25rem 0.5rem',
-                              background: account.color,
-                              borderRadius: '4px',
-                              fontSize: '0.7rem',
-                              fontWeight: '600'
-                            }}
-                            whileHover={{ scale: 1.1 }}
-                          >
-                            Use
-                          </motion.div>
-                        </motion.button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          </Card>
-        </motion.div>
-      </div>
+              {loading ? 'Signing In...' : '🚀 Sign In'}
+            </Button>
+          </motion.form>
+
+          {/* Demo Accounts */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            style={{
+              padding: '1.5rem',
+              background: 'rgba(255, 255, 255, 0.05)',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
+          >
+            <h4 style={{ 
+              margin: '0 0 1rem 0', 
+              color: 'white',
+              fontSize: '1rem',
+              fontWeight: '600',
+              textAlign: 'center'
+            }}>
+              ⚡ Quick Demo Access
+            </h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              {demoAccounts.map((account, index) => (
+                <motion.button
+                  key={account.role}
+                  type="button"
+                  onClick={() => fillDemoCredentials(account.username, account.password)}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '0.75rem 1rem',
+                    background: `linear-gradient(135deg, ${account.color}20, ${account.color}10)`,
+                    border: `1px solid ${account.color}30`,
+                    borderRadius: '12px',
+                    color: 'white',
+                    fontSize: '0.9rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '1.2rem' }}>{account.emoji}</span>
+                    <span style={{ fontWeight: '600' }}>{account.role}</span>
+                  </div>
+                  <span style={{ fontSize: '0.8rem', opacity: 0.8 }}>Click to fill</span>
+                </motion.button>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
     </div>
   );
 }
