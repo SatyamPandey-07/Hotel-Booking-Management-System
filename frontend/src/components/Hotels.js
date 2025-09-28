@@ -405,18 +405,7 @@ function Hotels() {
                   required
                   error={errors.starRating}
                 />
-                {isAdmin && (
-                  <Input
-                    label="Manager ID"
-                    name="managerId"
-                    type="number"
-                    value={newHotel.managerId}
-                    onChange={handleInputChange}
-                    required
-                    error={errors.managerId}
-                    placeholder="Enter manager ID"
-                  />
-                )}
+
               </div>
               <Input
                 label="Description"
