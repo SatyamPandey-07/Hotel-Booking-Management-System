@@ -212,9 +212,9 @@ function Dashboard() {
     customers: [5, 8, 6, 12, 10, 7, 11]
   });
   
-  // Simplified role-based permissions (ADMIN and USER only)
+  // Simplified role-based permissions (ADMIN and CUSTOMER only)
   const isAdmin = user?.role === 'ADMIN';
-  const isUser = user?.role === 'CUSTOMER' || user?.role === 'USER';
+  const isUser = user?.role === 'CUSTOMER';
 
   useEffect(() => {
     fetchDashboardData();
@@ -266,7 +266,7 @@ function Dashboard() {
     setTimeout(() => setAlert(null), 5000);
   };
 
-  // Role-specific dashboard configurations (ADMIN and USER only)
+  // Role-specific dashboard configurations (ADMIN and CUSTOMER only)
   const getDashboardConfig = () => {
     if (isAdmin) {
       return {

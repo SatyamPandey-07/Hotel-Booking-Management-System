@@ -36,7 +36,7 @@ function Hotels() {
   const [errors, setErrors] = useState({});
   
   const isAdmin = user?.role === 'ADMIN';
-  const isUser = user?.role === 'CUSTOMER' || user?.role === 'USER';
+  const isUser = user?.role === 'CUSTOMER';
 
   useEffect(() => {
     fetchHotels();

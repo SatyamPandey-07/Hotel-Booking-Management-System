@@ -58,7 +58,7 @@ function Rooms() {
 
   // Role-based permissions
   const isAdmin = user?.role === 'ADMIN';
-  const isUser = user?.role === 'CUSTOMER' || user?.role === 'USER';
+  const isUser = user?.role === 'CUSTOMER';
   
   // Get hotel ID from URL params if navigating from hotels page
   const urlParams = new URLSearchParams(location.search);
