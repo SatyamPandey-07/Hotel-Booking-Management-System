@@ -164,7 +164,6 @@ function Login() {
 
   const demoAccounts = [
     { role: 'Admin', username: 'admin', password: 'password', emoji: '👑', color: '#ef4444' },
-    { role: 'Manager', username: 'manager1', password: 'password', emoji: '👨‍💼', color: '#f59e0b' },
     { role: 'Customer', username: 'customer1', password: 'password123', emoji: '👤', color: '#10b981' }
   ];
 
