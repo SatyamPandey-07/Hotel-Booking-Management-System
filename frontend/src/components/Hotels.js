@@ -137,9 +137,9 @@ function Hotels() {
   };
 
   const filteredHotels = hotels.filter(hotel =>
-    hotel.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    hotel.address.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    hotel.city.toLowerCase().includes(searchTerm.toLowerCase())
+    (hotel.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (hotel.address || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (hotel.city || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const renderStars = (rating) => {
