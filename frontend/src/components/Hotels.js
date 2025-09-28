@@ -29,6 +29,13 @@ function Hotels() {
   const [editHotel, setEditHotel] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedHotel, setSelectedHotel] = useState(null);
+  const [bookingData, setBookingData] = useState({
+    checkInDate: '',
+    checkOutDate: '',
+    specialRequests: ''
+  });
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [alert, setAlert] = useState(null);
@@ -133,6 +140,76 @@ function Hotels() {
     setEditHotel(prev => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  // Booking functions
+  const handleBookNow = (hotel) => {
+    setSelectedHotel(hotel);
+    setShowBookingModal(true);
+    setBookingData({
+      checkInDate: '',
+      checkOutDate: '',
+      specialRequests: ''
+    });
+    setErrors({});
+  };
+
+  const handleBookingInputChange = (e) => {
+    const { name, value } = e.target;
+    setBookingData(prev => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleBookingSubmit = async (e) => {
+    e.preventDefault();
+    
+    const newErrors = {};
+    if (!bookingData.checkInDate) newErrors.checkInDate = 'Check-in date is required';
+    if (!bookingData.checkOutDate) newErrors.checkOutDate = 'Check-out date is required';
+    
+    if (bookingData.checkInDate && bookingData.checkOutDate) {
+      const checkIn = new Date(bookingData.checkInDate);
+      const checkOut = new Date(bookingData.checkOutDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      if (checkIn < today) newErrors.checkInDate = 'Check-in date cannot be in the past';
+      if (checkOut <= checkIn) newErrors.checkOutDate = 'Check-out date must be after check-in date';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      setSubmitLoading(true);
+      
+      // Get user ID from context - assuming user.id exists
+      const customerId = user.id || 1; // Fallback to 1 for testing
+      
+      const bookingPayload = {
+        customerId: customerId,
+        hotelId: selectedHotel.id,
+        checkInDate: bookingData.checkInDate,
+        checkOutDate: bookingData.checkOutDate,
+        specialRequests: bookingData.specialRequests || null,
+        status: 'PENDING'
+      };
+
+      const response = await axios.post('http://localhost:8080/api/bookings', bookingPayload);
+      
+      showAlert('Booking created successfully! 🎉', 'success');
+      setShowBookingModal(false);
+      setSelectedHotel(null);
+    } catch (error) {
+      console.error('Booking error:', error);
+      showAlert(error.response?.data?.error || 'Error creating booking. Please try again.', 'error');
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -595,20 +672,35 @@ function Hotels() {
                       borderTop: '1px solid #f3f4f6'
                     }}>
                       {isUser && (
-                        <Button 
-                          onClick={() => navigate(`/rooms?hotelId=${hotel.id}`)}
-                          style={{ 
-                            flex: 1,
-                            background: 'linear-gradient(135deg, #10b981, #059669)',
-                            border: 'none',
-                            color: 'white',
-                            fontWeight: '600',
-                            padding: '0.75rem 1rem'
-                          }}
-                        >
-                          <EyeIcon className="w-4 h-4 mr-2" />
-                          View Rooms
-                        </Button>
+                        <>
+                          <Button 
+                            onClick={() => handleBookNow(hotel)}
+                            style={{ 
+                              flex: 1,
+                              background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                              border: 'none',
+                              color: 'white',
+                              fontWeight: '700',
+                              padding: '0.75rem 1rem',
+                              fontSize: '0.95rem'
+                            }}
+                          >
+                            🏨 Book Now
+                          </Button>
+                          <Button 
+                            onClick={() => navigate(`/rooms?hotelId=${hotel.id}`)}
+                            variant="outline"
+                            style={{ 
+                              flex: 1,
+                              borderColor: '#10b981',
+                              color: '#10b981',
+                              fontWeight: '600',
+                              padding: '0.75rem 1rem'
+                            }}
+                          >
+                            🛏️ View Rooms
+                          </Button>
+                        </>
                       )}
                       
                       {isAdmin && (
@@ -740,6 +832,112 @@ function Hotels() {
           </form>
         )}
       </Modal>
+
+      {/* Booking Modal */}
+      {showBookingModal && selectedHotel && (
+        <Modal 
+          isOpen={showBookingModal} 
+          onClose={() => {
+            setShowBookingModal(false);
+            setSelectedHotel(null);
+            setErrors({});
+          }}
+          title={`Book ${selectedHotel.name}`}
+        >
+          <form onSubmit={handleBookingSubmit}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #f1f5f9, #f8fafc)',
+                borderRadius: '12px',
+                padding: '1.5rem',
+                border: '1px solid #e2e8f0',
+                marginBottom: '1.5rem'
+              }}>
+                <h4 style={{ 
+                  color: '#1e293b',
+                  fontSize: '1.1rem',
+                  fontWeight: '700',
+                  margin: '0 0 0.5rem 0'
+                }}>
+                  📍 {selectedHotel.name}
+                </h4>
+                <p style={{
+                  color: '#64748b',
+                  margin: 0,
+                  fontSize: '0.95rem'
+                }}>
+                  {selectedHotel.address}, {selectedHotel.city}, {selectedHotel.country}
+                </p>
+              </div>
+
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '1rem',
+                marginBottom: '1rem'
+              }}>
+                <Input
+                  label="Check-in Date"
+                  name="checkInDate"
+                  type="date"
+                  value={bookingData.checkInDate}
+                  onChange={handleBookingInputChange}
+                  required
+                  error={errors.checkInDate}
+                  min={new Date().toISOString().split('T')[0]}
+                />
+                <Input
+                  label="Check-out Date"
+                  name="checkOutDate"
+                  type="date"
+                  value={bookingData.checkOutDate}
+                  onChange={handleBookingInputChange}
+                  required
+                  error={errors.checkOutDate}
+                  min={bookingData.checkInDate || new Date().toISOString().split('T')[0]}
+                />
+              </div>
+
+              <Input
+                label="Special Requests (Optional)"
+                name="specialRequests"
+                value={bookingData.specialRequests}
+                onChange={handleBookingInputChange}
+                placeholder="Any special requests or preferences..."
+                multiline
+                rows={3}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
+              <Button 
+                type="button" 
+                variant="outline"
+                onClick={() => {
+                  setShowBookingModal(false);
+                  setSelectedHotel(null);
+                  setErrors({});
+                }}
+                disabled={submitLoading}
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit"
+                disabled={submitLoading}
+                style={{
+                  background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                  border: 'none',
+                  color: 'white'
+                }}
+              >
+                {submitLoading ? 'Booking...' : '🏨 Confirm Booking'}
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
+
     </div>
   );
 }
