@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import ThemeWrapper, { ThemedCard, ThemedHeader } from './ThemeWrapper';
@@ -202,6 +202,7 @@ function DashboardBackground() {
 
 function Dashboard() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [alert, setAlert] = useState(null);
@@ -273,10 +274,10 @@ function Dashboard() {
         subtitle: 'System Overview & Management',
         primaryColor: '#dc2626', // Red
         quickActions: [
-          { label: 'Add New Hotel', icon: PlusIcon, link: '/hotels', color: 'success' },
-          { label: 'Manage Users', icon: UserGroupIcon, link: '/users', color: 'info' },
-          { label: 'View All Bookings', icon: CalendarDaysIcon, link: '/bookings', color: 'primary' },
-          { label: 'System Settings', icon: Cog6ToothIcon, link: '/settings', color: 'secondary' }
+          { label: 'Add New Hotel', icon: PlusIcon, link: '/hotels', color: 'success', action: () => navigate('/hotels') },
+          { label: 'Manage Users', icon: UserGroupIcon, link: '/users', color: 'info', action: () => navigate('/customers') },
+          { label: 'View All Bookings', icon: CalendarDaysIcon, link: '/bookings', color: 'primary', action: () => navigate('/bookings') },
+          { label: 'Manage Rooms', icon: BuildingOfficeIcon, link: '/rooms', color: 'secondary', action: () => navigate('/rooms') }
         ]
       };
     } else {
@@ -285,10 +286,10 @@ function Dashboard() {
         subtitle: 'Your Personal Travel Hub',
         primaryColor: '#059669', // Emerald
         quickActions: [
-          { label: 'Browse Hotels', icon: BuildingOfficeIcon, link: '/hotels', color: 'primary' },
-          { label: 'Browse Rooms', icon: EyeIcon, link: '/rooms', color: 'info' },
-          { label: 'My Bookings', icon: CalendarDaysIcon, link: '/my-bookings', color: 'success' },
-          { label: 'My Profile', icon: UserGroupIcon, link: '/profile', color: 'secondary' }
+          { label: 'Browse Hotels', icon: BuildingOfficeIcon, link: '/hotels', color: 'primary', action: () => navigate('/hotels') },
+          { label: 'Browse Rooms', icon: EyeIcon, link: '/rooms', color: 'info', action: () => navigate('/rooms') },
+          { label: 'My Bookings', icon: CalendarDaysIcon, link: '/my-bookings', color: 'success', action: () => navigate('/my-bookings') },
+          { label: 'My Profile', icon: UserGroupIcon, link: '/profile', color: 'secondary', action: () => navigate('/profile') }
         ]
       };
     }
@@ -678,8 +679,9 @@ function Dashboard() {
               whileHover={{ scale: 1.05, y: -5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link to={action.link} style={{ textDecoration: 'none' }}>
-                <div style={{
+              <div 
+                onClick={action.action}
+                style={{
                   background: 'white',
                   border: '2px solid #e5e7eb',
                   borderRadius: '16px',
@@ -693,24 +695,24 @@ function Dashboard() {
                   flexDirection: 'column',
                   justifyContent: 'center',
                   alignItems: 'center'
+                }}
+              >
+                <action.icon 
+                  style={{
+                    width: '2.5rem',
+                    height: '2.5rem',
+                    color: config.primaryColor,
+                    marginBottom: '0.75rem'
+                  }}
+                />
+                <span style={{
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  color: '#374151'
                 }}>
-                  <action.icon 
-                    style={{
-                      width: '2.5rem',
-                      height: '2.5rem',
-                      color: config.primaryColor,
-                      marginBottom: '0.75rem'
-                    }}
-                  />
-                  <span style={{
-                    fontSize: '1rem',
-                    fontWeight: '600',
-                    color: '#374151'
-                  }}>
-                    {action.label}
-                  </span>
-                </div>
-              </Link>
+                  {action.label}
+                </span>
+              </div>
             </motion.div>
           ))}
         </motion.div>
@@ -844,7 +846,7 @@ function Dashboard() {
         >
           {/* Quick Actions Card */}
           <Card
-            title="Quick Actions"
+            title="🚀 Quick Actions"
             style={{
               background: '#ffffff',
               border: '1px solid #e2e8f0',
@@ -858,6 +860,7 @@ function Dashboard() {
               gap: '1rem'
             }}>
               <motion.button
+                onClick={() => navigate(isAdmin ? '/bookings' : '/hotels')}
                 style={{
                   padding: '1rem',
                   background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
@@ -870,10 +873,11 @@ function Dashboard() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {user?.role === 'CUSTOMER' ? 'Browse Hotels' : 'Manage Bookings'}
+                {isAdmin ? '📊 Manage Bookings' : '🏨 Browse Hotels'}
               </motion.button>
               
               <motion.button
+                onClick={() => navigate(isAdmin ? '/hotels' : '/my-bookings')}
                 style={{
                   padding: '1rem',
                   background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
@@ -886,7 +890,24 @@ function Dashboard() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {user?.role === 'CUSTOMER' ? 'My Bookings' : 'View Reports'}
+                {isAdmin ? '🏨 Manage Hotels' : '📝 My Bookings'}
+              </motion.button>
+              
+              <motion.button
+                onClick={() => navigate(isAdmin ? '/customers' : '/profile')}
+                style={{
+                  padding: '1rem',
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '12px',
+                  fontWeight: '600',
+                  cursor: 'pointer'
+                }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                {isAdmin ? '👥 Manage Users' : '👤 My Profile'}
               </motion.button>
             </div>
           </Card>
