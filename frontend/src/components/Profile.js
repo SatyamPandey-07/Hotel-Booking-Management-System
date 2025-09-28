@@ -48,10 +48,14 @@ function Profile() {
   const fetchProfile = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/customers/profile');
+      if (!user?.id) {
+        throw new Error('User ID not available');
+      }
+      const response = await axios.get(`http://localhost:8080/api/customers/${user.id}`);
       setProfile(response.data);
     } catch (error) {
       console.error('Error fetching profile:', error);
+      showAlert('Error loading profile. Using demo data.', 'warning');
       // Mock data for demo
       setProfile({
         id: user?.id || 1,

@@ -31,12 +31,12 @@ public class AuthController {
             // Validation
             if (loginRequest.getUsername() == null || loginRequest.getUsername().trim().isEmpty()) {
                 return ResponseEntity.badRequest()
-                    .body(new LoginResponse(null, null, null, null, null, "Username is required"));
+                    .body(new LoginResponse(null, null, null, null, null, null, "Username is required"));
             }
             
             if (loginRequest.getPassword() == null || loginRequest.getPassword().trim().isEmpty()) {
                 return ResponseEntity.badRequest()
-                    .body(new LoginResponse(null, null, null, null, null, "Password is required"));
+                    .body(new LoginResponse(null, null, null, null, null, null, "Password is required"));
             }
             
             LoginResponse response = authService.login(loginRequest);
@@ -49,7 +49,7 @@ public class AuthController {
             
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new LoginResponse(null, null, null, null, null, "Login failed: " + e.getMessage()));
+                .body(new LoginResponse(null, null, null, null, null, null, "Login failed: " + e.getMessage()));
         }
     }
     

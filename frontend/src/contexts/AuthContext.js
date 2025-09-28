@@ -28,12 +28,25 @@ export const AuthProvider = ({ children }) => {
 
   const validateToken = async () => {
     try {
-      const response = await axios.post('/api/auth/validate');
+      const response = await axios.post('http://localhost:8080/api/auth/validate');
       if (response.data.valid) {
-        setUser({
-          username: response.data.username,
-          role: response.data.role
-        });
+        // For token validation, we need to get user details to get the ID
+        try {
+          const userResponse = await axios.get(`http://localhost:8080/api/users/by-username/${response.data.username}`);
+          setUser({
+            id: userResponse.data.id,
+            username: response.data.username,
+            role: response.data.role,
+            firstName: userResponse.data.firstName,
+            lastName: userResponse.data.lastName
+          });
+        } catch (error) {
+          console.error('Error fetching user details:', error);
+          setUser({
+            username: response.data.username,
+            role: response.data.role
+          });
+        }
       } else {
         logout();
       }
@@ -59,6 +72,7 @@ export const AuthProvider = ({ children }) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
         
         setUser({
+          id: response.data.userId,
           username: response.data.username,
           role: response.data.role,
           firstName: response.data.firstName,

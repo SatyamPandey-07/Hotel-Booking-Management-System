@@ -42,10 +42,14 @@ function MyBookings() {
   const fetchMyBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`/api/bookings/customer/${user.id}`);
+      if (!user?.id) {
+        throw new Error('User ID not available');
+      }
+      const response = await axios.get(`http://localhost:8080/api/bookings/customer/${user.id}`);
       setBookings(response.data.bookings || response.data);
     } catch (error) {
       console.error('Error fetching bookings:', error);
+      showAlert('Error loading bookings. Using demo data.', 'warning');
       
       // Mock bookings data when backend is not available
       const mockBookings = [

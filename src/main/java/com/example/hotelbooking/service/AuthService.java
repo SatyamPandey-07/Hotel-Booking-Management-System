@@ -24,17 +24,17 @@ public class AuthService {
             User user = userDAO.findByUsername(loginRequest.getUsername());
             
             if (user == null) {
-                return new LoginResponse(null, null, null, null, null, "Invalid username or password");
+                return new LoginResponse(null, null, null, null, null, null, "Invalid username or password");
             }
             
             // For demo purposes, we're using plain text password comparison
             // In production, use BCrypt or similar for password hashing
             if (!user.getPassword().equals(loginRequest.getPassword())) {
-                return new LoginResponse(null, null, null, null, null, "Invalid username or password");
+                return new LoginResponse(null, null, null, null, null, null, "Invalid username or password");
             }
             
             if (!user.isActive()) {
-                return new LoginResponse(null, null, null, null, null, "Account is deactivated");
+                return new LoginResponse(null, null, null, null, null, null, "Account is deactivated");
             }
             
             // Generate JWT token
@@ -49,11 +49,12 @@ public class AuthService {
                 user.getRole(), 
                 user.getFirstName(), 
                 user.getLastName(),
+                user.getId(),
                 "Login successful"
             );
             
         } catch (Exception e) {
-            return new LoginResponse(null, null, null, null, null, "Login failed: " + e.getMessage());
+            return new LoginResponse(null, null, null, null, null, null, "Login failed: " + e.getMessage());
         }
     }
     
