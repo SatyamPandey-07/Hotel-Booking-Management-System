@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import { Button, Card, Input, Alert, LoadingSpinner, Modal } from './ui';
@@ -15,6 +16,7 @@ import {
 
 function Hotels() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [hotels, setHotels] = useState([]);
   const [newHotel, setNewHotel] = useState({
     name: '',
@@ -453,7 +455,7 @@ function Hotels() {
             </div>
           ) : filteredHotels.length === 0 ? (
             <div className="text-center" style={{ padding: 'var(--spacing-xl)', color: 'var(--gray-500)' }}>
-              <BuildingOfficeIcon className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--gray-400)' }} />
+              <BuildingOfficeIcon className="w-8 h-8 mx-auto mb-4" style={{ color: 'var(--gray-400)' }} />
               <h3>No Hotels Found</h3>
               <p>{searchTerm ? 'No hotels found matching your search.' : 'No hotels available yet.'}</p>
               {canAddHotels && !searchTerm && (
@@ -549,7 +551,7 @@ function Hotels() {
                               }}
                               onClick={() => {
                                 // Navigate to rooms for this hotel
-                                window.location.href = `/rooms?hotelId=${hotel.id}`;
+                                navigate(`/rooms?hotelId=${hotel.id}`);
                               }}
                             >
                               🏠 View Rooms

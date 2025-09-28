@@ -428,7 +428,7 @@ function Rooms() {
             </div>
           ) : filteredRooms.length === 0 ? (
             <div className="text-center" style={{ padding: 'var(--spacing-xl)', color: 'var(--gray-500)' }}>
-              <HomeIcon className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--gray-400)' }} />
+              <HomeIcon className="w-8 h-8 mx-auto mb-4" style={{ color: 'var(--gray-400)' }} />
               <h3>No Rooms Found</h3>
               <p>{searchTerm || selectedHotel ? 'No rooms match your search criteria.' : 'No rooms available.'}</p>
             </div>
