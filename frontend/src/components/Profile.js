@@ -130,12 +130,15 @@ function Profile() {
     
     try {
       setSaving(true);
-      const response = await axios.put('/api/customers/profile', profile);
+      // Use the correct endpoint format with customer ID
+      const response = await axios.put(`http://localhost:8080/api/customers/${user.id}`, profile);
       showAlert('Profile updated successfully!', 'success');
       setEditMode(false);
+      // Refresh profile data after successful update
+      fetchProfile();
     } catch (error) {
       console.error('Error updating profile:', error);
-      showAlert('Error updating profile. Please try again.', 'error');
+      showAlert(error.response?.data?.error || 'Error updating profile. Please try again.', 'error');
     } finally {
       setSaving(false);
     }
