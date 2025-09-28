@@ -442,43 +442,60 @@ function Hotels() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ 
-                    y: -8, 
-                    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' 
+                    y: -12, 
+                    scale: 1.02,
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)' 
                   }}
                   style={{
                     background: 'white',
-                    borderRadius: '16px',
+                    borderRadius: '20px',
                     overflow: 'hidden',
-                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                    border: '1px solid #e5e7eb',
-                    transition: 'all 0.3s ease'
+                    boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)',
+                    border: 'none',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    backdropFilter: 'blur(10px)'
                   }}
                 >
                   {/* Hotel Header */}
                   <div style={{ 
-                    background: 'linear-gradient(135deg, #f8fafc, #e5e7eb)',
-                    padding: '1.5rem',
-                    borderBottom: '1px solid #e5e7eb'
+                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    padding: '2rem 1.5rem',
+                    borderBottom: 'none',
+                    position: 'relative',
+                    overflow: 'hidden'
                   }}>
+                    <div style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      backdropFilter: 'blur(10px)'
+                    }}></div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div style={{ flex: 1 }}>
                         <h3 style={{ 
-                          fontSize: '1.375rem', 
-                          fontWeight: '700',
-                          color: '#1f2937',
-                          margin: '0 0 0.5rem 0'
+                          fontSize: '1.5rem', 
+                          fontWeight: '900',
+                          color: '#ffffff',
+                          margin: '0 0 0.5rem 0',
+                          textShadow: '0 2px 4px rgba(0,0,0,0.3)',
+                          position: 'relative',
+                          zIndex: 1
                         }}>
                           {hotel.name}
                         </h3>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', marginBottom: '0.75rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', marginBottom: '0.75rem', position: 'relative', zIndex: 1 }}>
                           {renderStars(hotel.starRating)}
                           <span style={{ 
                             marginLeft: '0.5rem', 
-                            fontSize: '0.875rem', 
-                            color: '#6b7280',
-                            fontWeight: '500'
+                            fontSize: '1rem', 
+                            color: '#fbbf24',
+                            fontWeight: '700',
+                            textShadow: '0 1px 2px rgba(0,0,0,0.3)'
                           }}>
-                            {hotel.starRating}.0
+                            {hotel.starRating}.0 ⭐
                           </span>
                         </div>
                       </div>
@@ -496,29 +513,35 @@ function Hotels() {
                   </div>
 
                   {/* Hotel Content */}
-                  <div style={{ padding: '1.5rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '1rem' }}>
-                      <MapPinIcon className="w-4 h-4" style={{ 
-                        color: '#6b7280', 
-                        marginTop: '0.125rem',
-                        flexShrink: 0
-                      }} />
-                      <div>
+                  <div style={{ padding: '2rem' }}>
+                    <div style={{ 
+                      background: 'linear-gradient(135deg, #f1f5f9, #f8fafc)',
+                      borderRadius: '12px',
+                      padding: '1.5rem',
+                      marginBottom: '1.5rem',
+                      border: '1px solid #e2e8f0'
+                    }}>
+                      <div style={{
+                        borderLeft: '4px solid #3b82f6',
+                        paddingLeft: '1rem'
+                      }}>
                         <p style={{ 
-                          color: '#1f2937', 
+                          color: '#1e293b', 
                           margin: 0, 
-                          fontSize: '1.1rem',
-                          fontWeight: '700',
-                          lineHeight: '1.4',
-                          letterSpacing: '0.01em'
+                          fontSize: '1.2rem',
+                          fontWeight: '800',
+                          lineHeight: '1.3',
+                          letterSpacing: '0.02em'
                         }}>
-                          {hotel.address}
+                          📍 {hotel.address}
                         </p>
                         <p style={{ 
-                          color: '#4b5563', 
-                          margin: '0.5rem 0 0 0',
-                          fontSize: '1rem',
-                          fontWeight: '600'
+                          color: '#475569', 
+                          margin: '0.75rem 0 0 0',
+                          fontSize: '1.1rem',
+                          fontWeight: '700',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em'
                         }}>
                           {hotel.city}, {hotel.country}
                         </p>
