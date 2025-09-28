@@ -281,7 +281,13 @@ function Rooms() {
   const openBookingModal = (room) => {
     setSelectedRoom(room);
     setShowBookingModal(true);
-    setBookingData(prev => ({ ...prev, guests: 1 }));
+    // Reset all booking data when opening modal
+    setBookingData({
+      checkIn: '',
+      checkOut: '',
+      guests: 1,
+      specialRequests: ''
+    });
     setErrors({});
   };
 
@@ -677,7 +683,13 @@ function Rooms() {
                 label="Check-in Date"
                 type="date"
                 value={bookingData.checkIn}
-                onChange={(e) => setBookingData(prev => ({ ...prev, checkIn: e.target.value }))}
+                onChange={(e) => {
+                  setBookingData(prev => ({ ...prev, checkIn: e.target.value }));
+                  // Clear error when user starts typing
+                  if (errors.checkIn) {
+                    setErrors(prev => ({ ...prev, checkIn: null }));
+                  }
+                }}
                 min={new Date().toISOString().split('T')[0]}
                 required
                 error={errors.checkIn}
@@ -687,7 +699,13 @@ function Rooms() {
                 label="Check-out Date"
                 type="date"
                 value={bookingData.checkOut}
-                onChange={(e) => setBookingData(prev => ({ ...prev, checkOut: e.target.value }))}
+                onChange={(e) => {
+                  setBookingData(prev => ({ ...prev, checkOut: e.target.value }));
+                  // Clear error when user starts typing
+                  if (errors.checkOut) {
+                    setErrors(prev => ({ ...prev, checkOut: null }));
+                  }
+                }}
                 min={bookingData.checkIn || new Date().toISOString().split('T')[0]}
                 required
                 error={errors.checkOut}
