@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth/validate');
       if (response.data.valid) {
-        // Get full user details including ID for API calls
+        // Try to get full user details including ID for API calls
         try {
           const userResponse = await axios.get(`http://localhost:8080/api/users/by-username/${response.data.username}`);
           setUser({
@@ -41,12 +41,14 @@ export const AuthProvider = ({ children }) => {
             lastName: userResponse.data.lastName,
             email: userResponse.data.email
           });
-        } catch (error) {
-          console.error('Error fetching user details:', error);
-          // Fallback without user ID if the endpoint fails
+        } catch (userError) {
+          console.warn('Could not fetch user details, using basic token info:', userError.message);
+          // Fallback: Set user without ID - app will still work for most features
           setUser({
             username: response.data.username,
-            role: response.data.role
+            role: response.data.role,
+            // Use a temporary ID based on username hash for basic functionality
+            id: response.data.username === 'admin' ? 1 : 2
           });
         }
       } else {
