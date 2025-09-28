@@ -6,7 +6,6 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button, Input, Alert, LoadingSpinner, Modal } from './ui';
 import {
   PlusIcon,
-  MagnifyingGlassIcon,
   MapPinIcon,
   StarIcon,
   PencilIcon,
@@ -271,23 +270,14 @@ function Hotels() {
         boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
         border: '1px solid #e5e7eb'
       }}>
-        <div style={{ position: 'relative', maxWidth: '500px' }}>
-          <MagnifyingGlassIcon className="w-5 h-5" style={{ 
-            position: 'absolute',
-            left: '1rem',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            color: '#9ca3af',
-            zIndex: 2
-          }} />
+        <div style={{ maxWidth: '500px' }}>
           <Input
-            placeholder="Search hotels by name, address, or city..."
+            placeholder="🔍 Search hotels by name, address, or city..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
               width: '100%',
-              paddingLeft: '2.75rem',
-              padding: '0.875rem 1rem 0.875rem 2.75rem',
+              padding: '0.875rem 1rem',
               border: '2px solid #e5e7eb',
               borderRadius: '12px',
               fontSize: '1rem',
