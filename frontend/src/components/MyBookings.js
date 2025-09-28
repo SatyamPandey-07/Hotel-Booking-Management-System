@@ -49,73 +49,8 @@ function MyBookings() {
       setBookings(response.data.bookings || response.data);
     } catch (error) {
       console.error('Error fetching bookings:', error);
-      showAlert('Error loading bookings. Using demo data.', 'warning');
-      
-      // Mock bookings data when backend is not available
-      const mockBookings = [
-        {
-          id: 1,
-          hotelName: 'Grand Palace Hotel',
-          roomNumber: '101',
-          roomType: 'DELUXE',
-          checkInDate: '2024-01-15',
-          checkOutDate: '2024-01-18',
-          totalAmount: 899.97,
-          status: 'CONFIRMED',
-          bookingDate: '2024-01-01',
-          specialRequests: 'Late check-in after 9 PM',
-          guests: 2,
-          nights: 3
-        },
-        {
-          id: 2,
-          hotelName: 'Seaside Resort & Spa',
-          roomNumber: '201',
-          roomType: 'DOUBLE',
-          checkInDate: '2024-02-20',
-          checkOutDate: '2024-02-23',
-          totalAmount: 599.97,
-          status: 'PENDING',
-          bookingDate: '2024-01-10',
-          specialRequests: 'Ocean view room preferred',
-          guests: 2,
-          nights: 3
-        },
-        {
-          id: 3,
-          hotelName: 'Mountain View Lodge',
-          roomNumber: '150',
-          roomType: 'SINGLE',
-          checkInDate: '2023-12-10',
-          checkOutDate: '2023-12-12',
-          totalAmount: 299.98,
-          status: 'COMPLETED',
-          bookingDate: '2023-11-20',
-          specialRequests: '',
-          guests: 1,
-          nights: 2
-        },
-        {
-          id: 4,
-          hotelName: 'Grand Palace Hotel',
-          roomNumber: '102',
-          roomType: 'SUITE',
-          checkInDate: '2024-03-15',
-          checkOutDate: '2024-03-17',
-          totalAmount: 999.98,
-          status: 'CANCELLED',
-          bookingDate: '2024-01-05',
-          specialRequests: 'Honeymoon package',
-          guests: 2,
-          nights: 2
-        }
-      ];
-      
-      setBookings(mockBookings);
-      
-      if (!error.response || error.response.status >= 500) {
-        showAlert('Using demo data - Connect to backend for live booking data', 'warning');
-      }
+      showAlert('Error loading bookings from server', 'error');
+      setBookings([]);
     } finally {
       setLoading(false);
     }

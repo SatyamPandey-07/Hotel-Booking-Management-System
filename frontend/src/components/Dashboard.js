@@ -223,39 +223,14 @@ function Dashboard() {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/dashboard/overview');
+      const response = await axios.get('http://localhost:8080/api/dashboard/overview');
+      console.log('Dashboard stats:', response.data);
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-      // Mock data for demo based on user role
-      const mockStats = isAdmin ? {
-        totalBookings: 125,
-        totalRevenue: 45000,
-        totalHotels: 3,
-        totalCustomers: 89,
-        totalRooms: 12,
-        totalUsers: 15,
-        pendingBookings: 8,
-        confirmedBookings: 45,
-        checkedInBookings: 12,
-        checkedOutBookings: 60,
-        cancelledBookings: 5,
-        systemHealth: 98.5,
-        activeUsers: 12
-      } : {
-        myBookings: 3,
-        myTotalSpent: 1250,
-        loyaltyPoints: 150,
-        upcomingBookings: 1,
-        completedBookings: 2,
-        favoriteHotels: 2,
-        memberSince: '2024-01-15',
-        nextBooking: 'Grand Hotel - Oct 15, 2024',
-        availableHotels: 15,
-        specialOffers: 3
-      };
-      
-      setStats(mockStats);
+      showAlert('Error loading dashboard statistics from server', 'warning');
+      // Set empty stats instead of mock data
+      setStats({});
     } finally {
       setLoading(false);
     }

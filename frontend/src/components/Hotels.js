@@ -525,28 +525,37 @@ function Hotels() {
                     
                     {hotel.description && (
                       <div style={{
-                        backgroundColor: '#f8fafc',
-                        border: '1px solid #e2e8f0',
-                        borderRadius: '8px',
-                        padding: '1rem',
-                        margin: '1rem 0 1.5rem 0'
+                        backgroundColor: '#f1f5f9',
+                        border: '2px solid #cbd5e1',
+                        borderRadius: '12px',
+                        padding: '1.25rem',
+                        margin: '1rem 0 1.5rem 0',
+                        boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
                       }}>
                         <h4 style={{
-                          color: '#1e293b',
-                          fontSize: '0.875rem',
-                          fontWeight: '600',
-                          margin: '0 0 0.5rem 0',
+                          color: '#0f172a',
+                          fontSize: '0.95rem',
+                          fontWeight: '700',
+                          margin: '0 0 0.75rem 0',
                           textTransform: 'uppercase',
-                          letterSpacing: '0.05em'
+                          letterSpacing: '0.05em',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem'
                         }}>
-                          Description
+                          📄 Hotel Description
                         </h4>
                         <p style={{ 
-                          color: '#475569', 
-                          fontSize: '0.95rem',
-                          lineHeight: '1.6',
+                          color: '#334155', 
+                          fontSize: '1rem',
+                          lineHeight: '1.7',
                           margin: '0',
-                          fontWeight: '400'
+                          fontWeight: '400',
+                          textAlign: 'justify',
+                          wordBreak: 'break-word',
+                          hyphens: 'auto',
+                          maxHeight: 'none',
+                          overflow: 'visible'
                         }}>
                           {hotel.description}
                         </p>

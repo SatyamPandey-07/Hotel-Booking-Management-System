@@ -25,7 +25,8 @@ function Customers() {
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/customers');
+      const response = await axios.get('http://localhost:8080/api/customers');
+      console.log('Customers response:', response.data);
       
       // Handle both old and new API response formats
       if (response.data.customers) {
@@ -35,7 +36,7 @@ function Customers() {
       }
     } catch (error) {
       console.error('Error fetching customers:', error);
-      showAlert('Failed to fetch customers', 'error');
+      showAlert('Failed to fetch customers from server', 'error');
     } finally {
       setLoading(false);
     }
@@ -90,7 +91,7 @@ function Customers() {
     
     try {
       setSubmitLoading(true);
-      const response = await axios.post('/api/customers', newCustomer);
+      const response = await axios.post('http://localhost:8080/api/customers', newCustomer);
       
       setNewCustomer({ name: '', email: '', password: '' });
       setShowForm(false);
@@ -123,7 +124,7 @@ function Customers() {
     
     try {
       setSubmitLoading(true);
-      const response = await axios.put(`/api/customers/${editCustomer.id}`, editCustomer);
+      const response = await axios.put(`http://localhost:8080/api/customers/${editCustomer.id}`, editCustomer);
       
       setShowEditModal(false);
       setEditCustomer(null);
@@ -144,7 +145,7 @@ function Customers() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
       try {
-        const response = await axios.delete(`/api/customers/${id}`);
+        const response = await axios.delete(`http://localhost:8080/api/customers/${id}`);
         fetchCustomers();
         
         const message = response.data.message || 'Customer deleted successfully!';

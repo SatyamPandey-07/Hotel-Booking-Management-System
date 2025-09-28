@@ -16,10 +16,13 @@ function CustomerBookings() {
   const fetchMyBookings = async () => {
     try {
       setLoading(true);
-      // For demo, using mock data. In real app, use customer-specific endpoint
-      const response = await axios.get('/api/bookings');
+      if (!user?.id) {
+        throw new Error('User ID not available');
+      }
       
-      // Handle structured API response - bookings are in response.data.bookings
+      const response = await axios.get(`http://localhost:8080/api/bookings/customer/${user.id}`);
+      console.log('Customer bookings response:', response.data);
+      
       let bookingsData = [];
       if (response.data && response.data.bookings && Array.isArray(response.data.bookings)) {
         bookingsData = response.data.bookings;
@@ -27,38 +30,11 @@ function CustomerBookings() {
         bookingsData = response.data;
       }
       
-      // Filter bookings for current customer (demo logic)
-      const myBookings = bookingsData.filter(booking => 
-        booking.customerName === user?.firstName + ' ' + user?.lastName ||
-        booking.customerId === user?.id
-      );
-      
-      setBookings(myBookings);
+      setBookings(bookingsData);
     } catch (error) {
       console.error('Error fetching bookings:', error);
-      // Mock data for demo
-      setBookings([
-        {
-          id: 1,
-          hotelName: 'Grand Hotel',
-          roomNumber: '101',
-          checkInDate: '2024-12-01',
-          checkOutDate: '2024-12-03',
-          totalAmount: 300.00,
-          status: 'CONFIRMED',
-          roomType: 'SINGLE'
-        },
-        {
-          id: 2,
-          hotelName: 'Beach Resort',
-          roomNumber: '205',
-          checkInDate: '2024-12-15',
-          checkOutDate: '2024-12-18',
-          totalAmount: 540.00,
-          status: 'PENDING',
-          roomType: 'SUITE'
-        }
-      ]);
+      showAlert('Error loading bookings from server', 'error');
+      setBookings([]);
     } finally {
       setLoading(false);
     }

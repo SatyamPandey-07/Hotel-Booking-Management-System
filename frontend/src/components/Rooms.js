@@ -116,12 +116,7 @@ function Rooms() {
       }
     } catch (error) {
       console.error('Error fetching hotels:', error);
-      // Mock hotels data
-      setHotels([
-        { id: 1, name: 'Grand Palace Hotel' },
-        { id: 2, name: 'Seaside Resort & Spa' },
-        { id: 3, name: 'Mountain View Lodge' }
-      ]);
+      setHotels([]);
     }
   };
 
@@ -235,6 +230,108 @@ function Rooms() {
     return icons[roomType] || '🏨';
   };
 
+  // Admin room management functions
+  const validateRoom = (room) => {
+    const newErrors = {};
+    if (!room.hotelId) newErrors.hotelId = 'Hotel is required';
+    if (!room.roomNumber?.trim()) newErrors.roomNumber = 'Room number is required';
+    if (!room.roomType) newErrors.roomType = 'Room type is required';
+    if (room.capacity < 1) newErrors.capacity = 'Capacity must be at least 1';
+    if (room.pricePerNight <= 0) newErrors.pricePerNight = 'Price must be greater than 0';
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleRoomSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateRoom(newRoom)) return;
+    
+    try {
+      setSubmitLoading(true);
+      const response = await axios.post('http://localhost:8080/api/rooms', newRoom);
+      console.log('Room added:', response.data);
+      setNewRoom({
+        hotelId: hotelIdFromUrl || '',
+        roomNumber: '',
+        roomType: 'DOUBLE',
+        capacity: 2,
+        pricePerNight: '',
+        amenities: '',
+        isAvailable: true
+      });
+      setShowForm(false);
+      setErrors({});
+      fetchRooms();
+      showAlert('Room added successfully!', 'success');
+    } catch (error) {
+      console.error('Error adding room:', error);
+      showAlert('Error adding room. Please check if backend server is running.', 'error');
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  const handleEdit = (room) => {
+    setEditRoom({ ...room });
+    setShowEditModal(true);
+    setErrors({});
+  };
+
+  const handleUpdateSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateRoom(editRoom)) return;
+    
+    try {
+      setSubmitLoading(true);
+      const response = await axios.put(`http://localhost:8080/api/rooms/${editRoom.id}`, editRoom);
+      console.log('Room updated:', response.data);
+      setShowEditModal(false);
+      setErrors({});
+      fetchRooms();
+      showAlert('Room updated successfully!', 'success');
+    } catch (error) {
+      console.error('Error updating room:', error);
+      showAlert('Error updating room. Please check if backend server is running.', 'error');
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  const handleDelete = async (roomId) => {
+    if (!window.confirm('Are you sure you want to delete this room?')) return;
+    
+    try {
+      await axios.delete(`http://localhost:8080/api/rooms/${roomId}`);
+      fetchRooms();
+      showAlert('Room deleted successfully!', 'success');
+    } catch (error) {
+      console.error('Error deleting room:', error);
+      showAlert('Error deleting room. Please try again.', 'error');
+    }
+  };
+
+  const handleRoomInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setNewRoom(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
+  const handleEditInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setEditRoom(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+  };
+
   // Get page info based on context
   const getPageInfo = () => {
     if (hotelIdFromUrl && rooms.length > 0) {
@@ -299,6 +396,158 @@ function Rooms() {
           {alert.message}
         </Alert>
       )}
+
+      {/* Admin Add Room Button */}
+      {isAdmin && (
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 'var(--spacing-lg)' }}>
+          <Button 
+            onClick={() => setShowForm(!showForm)}
+            style={{
+              background: showForm ? '#dc2626' : '#059669',
+              color: 'white',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 'var(--spacing-sm)'
+            }}
+          >
+            <PlusIcon className="w-4 h-4" />
+            {showForm ? 'Cancel' : 'Add Room'}
+          </Button>
+        </div>
+      )}
+
+      {/* Add Room Form */}
+      <AnimatePresence>
+        {showForm && isAdmin && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            style={{ marginBottom: 'var(--spacing-xl)' }}
+          >
+            <Card>
+              <h3 style={{ marginBottom: 'var(--spacing-lg)', display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
+                <PlusIcon className="w-5 h-5" style={{ color: '#059669' }} />
+                Add New Room
+              </h3>
+              
+              <form onSubmit={handleRoomSubmit}>
+                <div style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+                  gap: 'var(--spacing-lg)',
+                  marginBottom: 'var(--spacing-lg)'
+                }}>
+                  <div>
+                    <label>Hotel *</label>
+                    <select
+                      name="hotelId"
+                      value={newRoom.hotelId}
+                      onChange={handleRoomInputChange}
+                      required
+                      style={{
+                        width: '100%',
+                        padding: 'var(--spacing-sm) var(--spacing-md)',
+                        border: errors.hotelId ? '2px solid #dc2626' : '1px solid var(--border-color)',
+                        borderRadius: 'var(--border-radius)'
+                      }}
+                    >
+                      <option value="">Select Hotel</option>
+                      {hotels.map(hotel => (
+                        <option key={hotel.id} value={hotel.id}>{hotel.name}</option>
+                      ))}
+                    </select>
+                    {errors.hotelId && <span style={{ color: '#dc2626', fontSize: '0.875rem' }}>{errors.hotelId}</span>}
+                  </div>
+
+                  <Input
+                    label="Room Number *"
+                    name="roomNumber"
+                    value={newRoom.roomNumber}
+                    onChange={handleRoomInputChange}
+                    required
+                    error={errors.roomNumber}
+                    placeholder="e.g., 101, A-205"
+                  />
+
+                  <div>
+                    <label>Room Type *</label>
+                    <select
+                      name="roomType"
+                      value={newRoom.roomType}
+                      onChange={handleRoomInputChange}
+                      required
+                      style={{
+                        width: '100%',
+                        padding: 'var(--spacing-sm) var(--spacing-md)',
+                        border: errors.roomType ? '2px solid #dc2626' : '1px solid var(--border-color)',
+                        borderRadius: 'var(--border-radius)'
+                      }}
+                    >
+                      {roomTypes.map(type => (
+                        <option key={type.value} value={type.value}>{type.label}</option>
+                      ))}
+                    </select>
+                    {errors.roomType && <span style={{ color: '#dc2626', fontSize: '0.875rem' }}>{errors.roomType}</span>}
+                  </div>
+
+                  <Input
+                    label="Capacity *"
+                    name="capacity"
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={newRoom.capacity}
+                    onChange={handleRoomInputChange}
+                    required
+                    error={errors.capacity}
+                    placeholder="Maximum guests"
+                  />
+
+                  <Input
+                    label="Price Per Night ($) *"
+                    name="pricePerNight"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={newRoom.pricePerNight}
+                    onChange={handleRoomInputChange}
+                    required
+                    error={errors.pricePerNight}
+                    placeholder="199.99"
+                  />
+                </div>
+
+                <Input
+                  label="Amenities"
+                  name="amenities"
+                  value={newRoom.amenities}
+                  onChange={handleRoomInputChange}
+                  placeholder="WiFi, TV, Mini Bar, City View, Air Conditioning..."
+                  style={{ marginBottom: 'var(--spacing-lg)' }}
+                />
+
+                <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'flex-end' }}>
+                  <Button
+                    type="button"
+                    onClick={() => setShowForm(false)}
+                    variant="outline"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    loading={submitLoading}
+                    style={{ background: '#059669', color: 'white' }}
+                  >
+                    {submitLoading ? 'Adding...' : 'Add Room'}
+                  </Button>
+                </div>
+              </form>
+            </Card>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <Card>
         {/* Search and Filter Section */}
@@ -542,16 +791,33 @@ function Rooms() {
                         )}
                         
                         {isAdmin && (
-                          <Button
-                            variant="outline"
-                            size="small"
-                            style={{
-                              borderColor: 'var(--primary-color)',
-                              color: 'var(--primary-color)'
-                            }}
-                          >
-                            ⚙️ Manage
-                          </Button>
+                          <>
+                            <Button
+                              onClick={() => handleEdit(room)}
+                              variant="outline"
+                              size="small"
+                              style={{
+                                borderColor: '#3b82f6',
+                                color: '#3b82f6',
+                                marginRight: 'var(--spacing-xs)'
+                              }}
+                            >
+                              <PencilIcon className="w-4 h-4 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              onClick={() => handleDelete(room.id)}
+                              variant="outline"
+                              size="small"
+                              style={{
+                                borderColor: '#dc2626',
+                                color: '#dc2626'
+                              }}
+                            >
+                              <TrashIcon className="w-4 h-4 mr-1" />
+                              Delete
+                            </Button>
+                          </>
                         )}
                       </div>
                     </div>
@@ -668,6 +934,137 @@ function Rooms() {
                 </div>
               </div>
             )}
+          </form>
+        )}
+      </Modal>
+
+      {/* Edit Room Modal */}
+      <Modal
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        title="Edit Room"
+        footer={
+          <div style={{ display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'flex-end' }}>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowEditModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleUpdateSubmit} 
+              loading={submitLoading}
+              style={{ background: '#059669', color: 'white' }}
+            >
+              {submitLoading ? 'Updating...' : 'Update Room'}
+            </Button>
+          </div>
+        }
+      >
+        {editRoom && (
+          <form onSubmit={handleUpdateSubmit}>
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+              gap: 'var(--spacing-lg)',
+              marginBottom: 'var(--spacing-lg)'
+            }}>
+              <div>
+                <label>Hotel *</label>
+                <select
+                  name="hotelId"
+                  value={editRoom.hotelId}
+                  onChange={handleEditInputChange}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: 'var(--spacing-sm) var(--spacing-md)',
+                    border: errors.hotelId ? '2px solid #dc2626' : '1px solid var(--border-color)',
+                    borderRadius: 'var(--border-radius)'
+                  }}
+                >
+                  <option value="">Select Hotel</option>
+                  {hotels.map(hotel => (
+                    <option key={hotel.id} value={hotel.id}>{hotel.name}</option>
+                  ))}
+                </select>
+                {errors.hotelId && <span style={{ color: '#dc2626', fontSize: '0.875rem' }}>{errors.hotelId}</span>}
+              </div>
+
+              <Input
+                label="Room Number *"
+                name="roomNumber"
+                value={editRoom.roomNumber}
+                onChange={handleEditInputChange}
+                required
+                error={errors.roomNumber}
+              />
+
+              <div>
+                <label>Room Type *</label>
+                <select
+                  name="roomType"
+                  value={editRoom.roomType}
+                  onChange={handleEditInputChange}
+                  required
+                  style={{
+                    width: '100%',
+                    padding: 'var(--spacing-sm) var(--spacing-md)',
+                    border: errors.roomType ? '2px solid #dc2626' : '1px solid var(--border-color)',
+                    borderRadius: 'var(--border-radius)'
+                  }}
+                >
+                  {roomTypes.map(type => (
+                    <option key={type.value} value={type.value}>{type.label}</option>
+                  ))}
+                </select>
+                {errors.roomType && <span style={{ color: '#dc2626', fontSize: '0.875rem' }}>{errors.roomType}</span>}
+              </div>
+
+              <Input
+                label="Capacity *"
+                name="capacity"
+                type="number"
+                min="1"
+                max="10"
+                value={editRoom.capacity}
+                onChange={handleEditInputChange}
+                required
+                error={errors.capacity}
+              />
+
+              <Input
+                label="Price Per Night ($) *"
+                name="pricePerNight"
+                type="number"
+                min="0"
+                step="0.01"
+                value={editRoom.pricePerNight}
+                onChange={handleEditInputChange}
+                required
+                error={errors.pricePerNight}
+              />
+            </div>
+
+            <Input
+              label="Amenities"
+              name="amenities"
+              value={editRoom.amenities || ''}
+              onChange={handleEditInputChange}
+              placeholder="WiFi, TV, Mini Bar, City View, Air Conditioning..."
+              style={{ marginBottom: 'var(--spacing-lg)' }}
+            />
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)' }}>
+              <input
+                type="checkbox"
+                name="isAvailable"
+                checked={editRoom.isAvailable}
+                onChange={handleEditInputChange}
+                id="editAvailable"
+              />
+              <label htmlFor="editAvailable">Room is available for booking</label>
+            </div>
           </form>
         )}
       </Modal>

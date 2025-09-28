@@ -55,19 +55,18 @@ function Profile() {
       setProfile(response.data);
     } catch (error) {
       console.error('Error fetching profile:', error);
-      showAlert('Error loading profile. Using demo data.', 'warning');
-      // Mock data for demo
+      showAlert('Error loading profile from server', 'error');
       setProfile({
-        id: user?.id || 1,
-        name: user?.firstName ? `${user.firstName} ${user.lastName}` : user?.username || 'John Doe',
-        email: user?.email || 'john.doe@example.com',
-        phone: '+1-555-0123',
-        address: '123 Main St, New York, NY 10001',
-        dateOfBirth: '1990-01-15',
-        loyaltyPoints: 1250,
-        totalBookings: 8,
-        totalSpent: 3450.00,
-        memberSince: '2024-01-15',
+        id: user?.id,
+        name: user?.firstName ? `${user.firstName} ${user.lastName}` : user?.username || '',
+        email: user?.email || '',
+        phone: '',
+        address: '',
+        dateOfBirth: '',
+        loyaltyPoints: 0,
+        totalBookings: 0,
+        totalSpent: 0,
+        memberSince: '',
         preferences: {
           roomType: 'DOUBLE',
           smokingPreference: 'NON_SMOKING',

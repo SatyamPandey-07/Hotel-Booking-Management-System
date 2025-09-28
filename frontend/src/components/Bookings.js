@@ -31,7 +31,8 @@ function Bookings() {
   const fetchBookings = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/bookings');
+      const response = await axios.get('http://localhost:8080/api/bookings');
+      console.log('Bookings response:', response.data);
       
       // Handle both old and new API response formats
       if (response.data.bookings) {
@@ -49,7 +50,7 @@ function Bookings() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('/api/customers');
+      const response = await axios.get('http://localhost:8080/api/customers');
       if (response.data.customers) {
         setCustomers(response.data.customers);
       } else {
@@ -62,7 +63,7 @@ function Bookings() {
 
   const fetchHotels = async () => {
     try {
-      const response = await axios.get('/api/hotels');
+      const response = await axios.get('http://localhost:8080/api/hotels');
       if (response.data.hotels) {
         setHotels(response.data.hotels);
       } else {
@@ -125,7 +126,7 @@ function Bookings() {
         hotelId: parseInt(newBooking.hotelId),
         bookingDate: newBooking.bookingDate
       };
-      const response = await axios.post('/api/bookings', bookingData);
+      const response = await axios.post('http://localhost:8080/api/bookings', bookingData);
       
       setNewBooking({ customerId: '', hotelId: '', bookingDate: '' });
       setShowForm(false);
@@ -168,7 +169,7 @@ function Bookings() {
         hotelId: parseInt(editBooking.hotelId),
         bookingDate: editBooking.bookingDate
       };
-      const response = await axios.put(`/api/bookings/${editBooking.id}`, bookingData);
+      const response = await axios.put(`http://localhost:8080/api/bookings/${editBooking.id}`, bookingData);
       
       setShowEditModal(false);
       setEditBooking(null);
@@ -189,7 +190,7 @@ function Bookings() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this booking?')) {
       try {
-        const response = await axios.delete(`/api/bookings/${id}`);
+        const response = await axios.delete(`http://localhost:8080/api/bookings/${id}`);
         fetchBookings();
         
         const message = response.data.message || 'Booking deleted successfully!';
