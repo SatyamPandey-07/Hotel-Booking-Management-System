@@ -405,7 +405,7 @@ function Hotels() {
             borderRadius: '16px',
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
           }}>
-            <BuildingOfficeIcon className="w-16 h-16 mx-auto mb-4" style={{ color: '#d1d5db' }} />
+            <BuildingOfficeIcon className="w-8 h-8 mx-auto mb-4" style={{ color: '#d1d5db' }} />
             <h3 style={{ fontSize: '1.5rem', fontWeight: '600', color: '#374151', marginBottom: '0.5rem' }}>
               No Hotels Found
             </h3>
