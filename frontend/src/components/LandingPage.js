@@ -113,12 +113,12 @@ function LandingPage() {
       icon: <DevicePhoneMobileIcon className="w-8 h-8" />,
       color: 'from-blue-500 to-purple-600',
       technologies: [
-        { name: 'React 18', description: 'Modern UI framework with concurrent features', version: 'v18.2.0' },
-        { name: 'TypeScript', description: 'Type-safe development with enhanced IDE support', version: 'v5.0+' },
-        { name: 'Tailwind CSS', description: 'Utility-first CSS framework for rapid UI development', version: 'v3.3+' },
-        { name: 'Framer Motion', description: 'Production-ready motion library for React', version: 'v10.0+' },
-        { name: 'Three.js', description: '3D graphics library for immersive experiences', version: 'v0.150+' },
-        { name: 'React Router', description: 'Declarative routing for React applications', version: 'v6.8+' }
+        { name: 'React 18', description: 'Modern UI framework with hooks and functional components', version: 'v18.2.0' },
+        { name: 'React Router', description: 'Declarative routing for React applications', version: 'v6.3.0' },
+        { name: 'Framer Motion', description: 'Production-ready motion library for animations', version: 'v12.23.22' },
+        { name: 'Three.js', description: '3D graphics library for immersive background effects', version: 'v0.180.0' },
+        { name: 'Heroicons', description: 'Beautiful hand-crafted SVG icons by Tailwind team', version: 'v2.2.0' },
+        { name: 'Custom CSS', description: 'CSS Variables with responsive design patterns', version: 'Latest' }
       ]
     },
     {
@@ -126,38 +126,35 @@ function LandingPage() {
       icon: <CpuChipIcon className="w-8 h-8" />,
       color: 'from-green-500 to-teal-600',
       technologies: [
-        { name: 'Spring Boot', description: 'Enterprise Java framework with auto-configuration', version: 'v3.1+' },
-        { name: 'Spring Security', description: 'Comprehensive security framework for authentication', version: 'v6.1+' },
-        { name: 'JPA/Hibernate', description: 'Object-relational mapping with advanced caching', version: 'v6.2+' },
-        { name: 'PostgreSQL', description: 'Advanced open-source relational database', version: 'v15+' },
-        { name: 'Redis', description: 'In-memory data structure store for caching', version: 'v7.0+' },
-        { name: 'Apache Kafka', description: 'Distributed event streaming platform', version: 'v3.4+' }
+        { name: 'Spring Boot', description: 'Enterprise Java framework with auto-configuration', version: 'v2.7.18' },
+        { name: 'Spring Security', description: 'Comprehensive security framework for authentication', version: 'v2.7.18' },
+        { name: 'Spring JDBC', description: 'Database connectivity and transaction management', version: 'v2.7.18' },
+        { name: 'Java 11', description: 'Long-term support Java version with modern features', version: 'v11' },
+        { name: 'Maven', description: 'Dependency management and build automation', version: 'Latest' },
+        { name: 'Spring Actuator', description: 'Production-ready monitoring and management', version: 'v2.7.18' }
       ]
     },
     {
-      category: 'Cloud & DevOps',
+      category: 'Database & Storage',
       icon: <CloudIcon className="w-8 h-8" />,
       color: 'from-orange-500 to-red-600',
       technologies: [
-        { name: 'AWS EC2/ECS', description: 'Scalable cloud computing and container orchestration', version: 'Latest' },
-        { name: 'Docker', description: 'Containerization platform for consistent deployments', version: 'v24.0+' },
-        { name: 'Kubernetes', description: 'Container orchestration for production workloads', version: 'v1.27+' },
-        { name: 'AWS RDS', description: 'Managed relational database service', version: 'Latest' },
-        { name: 'CloudFront CDN', description: 'Global content delivery network', version: 'Latest' },
-        { name: 'GitHub Actions', description: 'CI/CD pipeline automation', version: 'Latest' }
+        { name: 'H2 Database', description: 'In-memory database for development and testing', version: 'Latest' },
+        { name: 'MySQL Support', description: 'Production-ready relational database connector', version: 'v8.0+' },
+        { name: 'JDBC', description: 'Java Database Connectivity for SQL operations', version: 'Latest' },
+        { name: 'SQL Scripts', description: 'Database initialization and sample data loading', version: 'Latest' }
       ]
     },
     {
-      category: 'Security & Monitoring',
+      category: 'Security & Communication',
       icon: <ShieldCheckIcon className="w-8 h-8" />,
       color: 'from-purple-500 to-pink-600',
       technologies: [
-        { name: 'JWT Authentication', description: 'Stateless token-based authentication system', version: 'v9.0+' },
-        { name: 'OAuth 2.0', description: 'Industry-standard authorization framework', version: 'v2.1' },
-        { name: 'SSL/TLS Encryption', description: 'End-to-end data encryption in transit', version: 'v1.3' },
-        { name: 'OWASP Guidelines', description: 'Security best practices implementation', version: 'v4.0' },
-        { name: 'AWS CloudWatch', description: 'Comprehensive monitoring and observability', version: 'Latest' },
-        { name: 'ELK Stack', description: 'Elasticsearch, Logstash, and Kibana for logging', version: 'v8.8+' }
+        { name: 'JWT Authentication', description: 'Stateless token-based authentication system', version: 'v0.11.5' },
+        { name: 'Axios', description: 'Promise-based HTTP client for API communication', version: 'v0.27.2' },
+        { name: 'CORS Configuration', description: 'Cross-origin resource sharing setup', version: 'Latest' },
+        { name: 'Form Validation', description: 'Client-side and server-side data validation', version: 'Built-in' },
+        { name: 'React Hot Toast', description: 'Beautiful toast notifications for user feedback', version: 'v2.6.0' }
       ]
     }
   ];
@@ -395,11 +392,8 @@ function LandingPage() {
           <div style={{ 
             display: 'grid', 
             gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', 
-            gap: '2rem',
-            '@media (min-width: 1024px)': {
-              gridTemplateColumns: 'repeat(4, 1fr)'
-            }
-          }}>
+            gap: '2rem'
+          }} className="tech-stack-grid">
             {techStack.map((stack, index) => (
               <motion.div
                 key={index}
@@ -825,6 +819,18 @@ function LandingPage() {
           max-width: 1200px;
           margin: 0 auto;
           padding: 0 2rem;
+        }
+
+        .tech-stack-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+          .tech-stack-grid {
+            grid-template-columns: repeat(4, 1fr);
+          }
         }
 
         @media (max-width: 768px) {
