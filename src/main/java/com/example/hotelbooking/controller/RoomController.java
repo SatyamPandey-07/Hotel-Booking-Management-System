@@ -110,6 +110,10 @@ public class RoomController {
                 return ResponseEntity.badRequest().body(response);
             }
             
+            // Ensure new rooms are available and active
+            room.setAvailable(true);
+            room.setActive(true);
+            
             roomDAO.addRoom(room);
             response.put("message", "Room added successfully");
             response.put("room", room);

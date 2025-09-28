@@ -9,7 +9,11 @@ function Bookings() {
   const [newBooking, setNewBooking] = useState({
     customerId: '',
     hotelId: '',
-    bookingDate: ''
+    checkInDate: '',
+    checkOutDate: '',
+    totalAmount: '',
+    status: 'PENDING',
+    specialRequests: ''
   });
   const [editBooking, setEditBooking] = useState(null);
   const [showForm, setShowForm] = useState(false);
@@ -85,8 +89,26 @@ function Bookings() {
       newErrors.hotelId = 'Hotel is required';
     }
     
-    if (!booking.bookingDate) {
-      newErrors.bookingDate = 'Booking date is required';
+    if (!booking.checkInDate) {
+      newErrors.checkInDate = 'Check-in date is required';
+    }
+    
+    if (!booking.checkOutDate) {
+      newErrors.checkOutDate = 'Check-out date is required';
+    }
+    
+    if (booking.checkInDate && booking.checkOutDate) {
+      if (new Date(booking.checkInDate) >= new Date(booking.checkOutDate)) {
+        newErrors.checkOutDate = 'Check-out date must be after check-in date';
+      }
+      
+      if (new Date(booking.checkInDate) < new Date().setHours(0, 0, 0, 0)) {
+        newErrors.checkInDate = 'Check-in date cannot be in the past';
+      }
+    }
+    
+    if (booking.totalAmount && parseFloat(booking.totalAmount) < 0) {
+      newErrors.totalAmount = 'Total amount cannot be negative';
     }
     
     setErrors(newErrors);
@@ -124,11 +146,23 @@ function Bookings() {
       const bookingData = {
         customerId: parseInt(newBooking.customerId),
         hotelId: parseInt(newBooking.hotelId),
-        bookingDate: newBooking.bookingDate
+        checkInDate: newBooking.checkInDate,
+        checkOutDate: newBooking.checkOutDate,
+        totalAmount: parseFloat(newBooking.totalAmount) || 0.0,
+        status: newBooking.status || 'PENDING',
+        specialRequests: newBooking.specialRequests || ''
       };
       const response = await axios.post('http://localhost:8080/api/bookings', bookingData);
       
-      setNewBooking({ customerId: '', hotelId: '', bookingDate: '' });
+      setNewBooking({ 
+        customerId: '', 
+        hotelId: '', 
+        checkInDate: '', 
+        checkOutDate: '', 
+        totalAmount: '', 
+        status: 'PENDING', 
+        specialRequests: '' 
+      });
       setShowForm(false);
       setErrors({});
       fetchBookings();
@@ -294,13 +328,57 @@ function Bookings() {
                 error={errors.hotelId}
               />
               <Input
-                label="Booking Date"
+                label="Check-in Date"
                 type="date"
-                name="bookingDate"
-                value={newBooking.bookingDate}
+                name="checkInDate"
+                value={newBooking.checkInDate}
                 onChange={handleInputChange}
                 required
-                error={errors.bookingDate}
+                error={errors.checkInDate}
+                min={new Date().toISOString().split('T')[0]}
+              />
+              <Input
+                label="Check-out Date"
+                type="date"
+                name="checkOutDate"
+                value={newBooking.checkOutDate}
+                onChange={handleInputChange}
+                required
+                error={errors.checkOutDate}
+                min={newBooking.checkInDate || new Date().toISOString().split('T')[0]}
+              />
+              <Input
+                label="Total Amount ($)"
+                type="number"
+                step="0.01"
+                min="0"
+                name="totalAmount"
+                value={newBooking.totalAmount}
+                onChange={handleInputChange}
+                placeholder="0.00"
+                error={errors.totalAmount}
+              />
+              <Select
+                label="Status"
+                name="status"
+                value={newBooking.status}
+                onChange={handleInputChange}
+                options={[
+                  { value: 'PENDING', label: 'Pending' },
+                  { value: 'CONFIRMED', label: 'Confirmed' },
+                  { value: 'CHECKED_IN', label: 'Checked In' },
+                  { value: 'CHECKED_OUT', label: 'Checked Out' },
+                  { value: 'CANCELLED', label: 'Cancelled' }
+                ]}
+                error={errors.status}
+              />
+              <Input
+                label="Special Requests"
+                name="specialRequests"
+                value={newBooking.specialRequests}
+                onChange={handleInputChange}
+                placeholder="Any special requests..."
+                error={errors.specialRequests}
               />
               <div className="flex gap-sm">
                 <Button type="submit" loading={submitLoading}>

@@ -70,9 +70,10 @@ public class RoomDAO {
     }
 
     public void addRoom(Room room) {
-        String sql = "INSERT INTO rooms(hotel_id, room_number, room_type, capacity, price_per_night, amenities) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO rooms(hotel_id, room_number, room_type, capacity, price_per_night, amenities, is_available, is_active) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql, room.getHotelId(), room.getRoomNumber(), room.getRoomType(), 
-                           room.getCapacity(), room.getPricePerNight(), room.getAmenities());
+                           room.getCapacity(), room.getPricePerNight(), room.getAmenities(), 
+                           room.isAvailable(), true); // Always set is_active to true for new rooms
     }
 
     public Room getRoomById(int id) {
