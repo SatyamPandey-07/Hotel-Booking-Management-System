@@ -312,11 +312,7 @@ function Dashboard() {
           title: '🛡️ Admin Dashboard',
           description: 'Complete system overview and management'
         };
-      case 'MANAGER':
-        return {
-          title: '👨‍💼 Manager Dashboard', 
-          description: 'Hotel operations and booking management'
-        };
+
       case 'CUSTOMER':
         return {
           title: '🏨 Welcome to Hotel Booking',
@@ -402,41 +398,6 @@ function Dashboard() {
           icon: <UserGroupIcon className="w-6 h-6" />,
           color: 'from-yellow-500 to-orange-600',
           trend: '+18%',
-          chartData: chartData.customers
-        }
-      ],
-      MANAGER: [
-        {
-          label: 'Hotel Bookings',
-          value: stats?.totalBookings || 0,
-          icon: <ChartBarIcon className="w-6 h-6" />,
-          color: 'from-blue-500 to-purple-600',
-          trend: '+12%',
-          chartData: chartData.bookings
-        },
-        {
-          label: 'Hotel Revenue',
-          value: stats?.totalRevenue || 0,
-          prefix: '$',
-          icon: <CurrencyDollarIcon className="w-6 h-6" />,
-          color: 'from-green-500 to-emerald-600',
-          trend: '+20%',
-          chartData: chartData.revenue
-        },
-        {
-          label: 'Total Rooms',
-          value: stats?.totalRooms || 0,
-          icon: <BuildingOfficeIcon className="w-6 h-6" />,
-          color: 'from-purple-500 to-pink-600',
-          trend: '+5%',
-          chartData: chartData.customers
-        },
-        {
-          label: 'Hotel Customers',
-          value: stats?.totalCustomers || 0,
-          icon: <UserGroupIcon className="w-6 h-6" />,
-          color: 'from-yellow-500 to-orange-600',
-          trend: '+15%',
           chartData: chartData.customers
         }
       ]

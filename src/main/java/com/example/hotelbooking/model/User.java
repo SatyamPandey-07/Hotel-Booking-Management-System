@@ -7,7 +7,7 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private String role; // ADMIN, MANAGER, CUSTOMER
+    private String role; // ADMIN, CUSTOMER
     private String firstName;
     private String lastName;
     private String phone;

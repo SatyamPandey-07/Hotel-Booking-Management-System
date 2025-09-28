@@ -84,7 +84,6 @@ CREATE TABLE IF NOT EXISTS bookings (
 -- Insert sample users
 INSERT INTO users (username, email, password, role, first_name, last_name, phone) VALUES
 ('admin', 'admin@hotel.com', 'password', 'ADMIN', 'Admin', 'User', '+1-555-0001'),
-('manager1', 'manager1@hotel.com', 'password', 'MANAGER', 'John', 'Manager', '+1-555-0002'),
 ('customer1', 'john@example.com', 'password123', 'CUSTOMER', 'John', 'Doe', '+1-555-0101'),
 ('customer2', 'jane@example.com', 'password456', 'CUSTOMER', 'Jane', 'Smith', '+1-555-0102'),
 ('customer3', 'bob@example.com', 'password789', 'CUSTOMER', 'Bob', 'Johnson', '+1-555-0103');
