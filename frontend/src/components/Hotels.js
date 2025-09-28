@@ -505,18 +505,20 @@ function Hotels() {
                       }} />
                       <div>
                         <p style={{ 
-                          color: '#374151', 
+                          color: '#1f2937', 
                           margin: 0, 
-                          fontSize: '0.95rem',
-                          fontWeight: '500',
-                          lineHeight: '1.4'
+                          fontSize: '1.1rem',
+                          fontWeight: '700',
+                          lineHeight: '1.4',
+                          letterSpacing: '0.01em'
                         }}>
                           {hotel.address}
                         </p>
                         <p style={{ 
-                          color: '#6b7280', 
-                          margin: '0.25rem 0 0 0',
-                          fontSize: '0.875rem'
+                          color: '#4b5563', 
+                          margin: '0.5rem 0 0 0',
+                          fontSize: '1rem',
+                          fontWeight: '600'
                         }}>
                           {hotel.city}, {hotel.country}
                         </p>
