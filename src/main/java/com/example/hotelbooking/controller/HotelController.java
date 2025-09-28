@@ -86,11 +86,6 @@ public class HotelController {
                 return ResponseEntity.badRequest().body(response);
             }
             
-            if (hotel.getManagerId() <= 0) {
-                response.put("error", "Valid manager ID is required");
-                return ResponseEntity.badRequest().body(response);
-            }
-            
             hotelDAO.addHotel(hotel);
             response.put("message", "Hotel added successfully");
             response.put("hotel", hotel);
@@ -152,11 +147,6 @@ public class HotelController {
             
             if (hotel.getAddress() == null || hotel.getAddress().trim().isEmpty()) {
                 response.put("error", "Hotel address is required");
-                return ResponseEntity.badRequest().body(response);
-            }
-            
-            if (hotel.getManagerId() <= 0) {
-                response.put("error", "Valid manager ID is required");
                 return ResponseEntity.badRequest().body(response);
             }
             

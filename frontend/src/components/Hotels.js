@@ -172,8 +172,7 @@ function Hotels() {
     try {
       setSubmitLoading(true);
       const hotelData = {
-        ...newHotel,
-        managerId: parseInt(newHotel.managerId)
+        ...newHotel
       };
       const response = await axios.post('/api/hotels', hotelData);
       
@@ -183,8 +182,7 @@ function Hotels() {
         city: '',
         country: '',
         description: '',
-        starRating: 5,
-        managerId: '' 
+        starRating: 5
       });
       setShowForm(false);
       setErrors({});
@@ -202,7 +200,7 @@ function Hotels() {
   };
 
   const handleEdit = (hotel) => {
-    setEditHotel({ ...hotel, managerId: hotel.managerId.toString() });
+    setEditHotel({ ...hotel });
     setShowEditModal(true);
     setErrors({});
   };
@@ -218,7 +216,7 @@ function Hotels() {
       setSubmitLoading(true);
       const hotelData = {
         ...editHotel,
-        managerId: parseInt(editHotel.managerId)
+        // managerId removed from system
       };
       const response = await axios.put(`/api/hotels/${editHotel.id}`, hotelData);
       
@@ -502,12 +500,7 @@ function Hotels() {
                               <span className="list-item-subtitle">📍 {hotel.city}, {hotel.country}</span>
                             </div>
                           )}
-                          {isAdmin && hotel.managerId && (
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
-                              <UserIcon className="w-4 h-4" style={{ color: 'var(--gray-500)' }} />
-                              <span className="list-item-subtitle">Manager ID: {hotel.managerId}</span>
-                            </div>
-                          )}
+
                           {isUser && (
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', color: 'var(--success-color)' }}>
                               <span style={{ fontSize: '0.875rem', fontWeight: '600' }}>✨ Available for Booking</span>
@@ -667,17 +660,7 @@ function Hotels() {
                 onChange={handleEditInputChange}
                 error={errors.starRating}
               />
-              {isAdmin && (
-                <Input
-                  label="Manager ID"
-                  type="number"
-                  name="managerId"
-                  value={editHotel.managerId}
-                  onChange={handleEditInputChange}
-                  required
-                  error={errors.managerId}
-                />
-              )}
+
             </div>
             <Input
               label="Description"
