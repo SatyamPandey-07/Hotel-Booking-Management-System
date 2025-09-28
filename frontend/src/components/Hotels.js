@@ -484,9 +484,9 @@ function Hotels() {
                       padding: 'var(--spacing-xl)',
                       boxShadow: 'var(--shadow-md)',
                       transition: 'all 0.2s ease',
-                      cursor: isCustomer ? 'pointer' : 'default'
+                      cursor: isUser ? 'pointer' : 'default'
                     }}
-                    whileHover={isCustomer ? { scale: 1.02, boxShadow: 'var(--shadow-lg)' } : {}}
+                    whileHover={isUser ? { scale: 1.02, boxShadow: 'var(--shadow-lg)' } : {}}
                   >
                     <div className="list-item-header">
                       <div className="list-item-content">

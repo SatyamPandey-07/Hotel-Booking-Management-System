@@ -12,14 +12,15 @@ import {
   CurrencyDollarIcon,
   PencilIcon,
   TrashIcon,
-  BedIcon,
+  HomeIcon,
   WifiIcon,
   TvIcon,
   ShieldCheckIcon,
   StarIcon,
   CalendarDaysIcon,
   CheckIcon,
-  XMarkIcon
+  XMarkIcon,
+  EyeIcon
 } from '@heroicons/react/24/outline';
 
 function Rooms() {
@@ -427,7 +428,7 @@ function Rooms() {
             </div>
           ) : filteredRooms.length === 0 ? (
             <div className="text-center" style={{ padding: 'var(--spacing-xl)', color: 'var(--gray-500)' }}>
-              <BedIcon className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--gray-400)' }} />
+              <HomeIcon className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--gray-400)' }} />
               <h3>No Rooms Found</h3>
               <p>{searchTerm || selectedHotel ? 'No rooms match your search criteria.' : 'No rooms available.'}</p>
             </div>
