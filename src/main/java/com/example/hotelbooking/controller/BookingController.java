@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -143,6 +144,62 @@ public class BookingController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.put("error", "Error fetching customer bookings");
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateBooking(@PathVariable int id, @RequestBody Booking booking) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            if (id <= 0) {
+                response.put("error", "Invalid booking ID");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Check if booking exists
+            Booking existingBooking = bookingDAO.getBookingById(id);
+            if (existingBooking == null) {
+                response.put("error", "Booking not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+            
+            // Validation
+            if (booking.getCustomerId() <= 0) {
+                response.put("error", "Valid customer ID is required");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            if (booking.getHotelId() <= 0) {
+                response.put("error", "Valid hotel ID is required");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            if (booking.getCheckInDate() == null) {
+                response.put("error", "Check-in date is required");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            if (booking.getCheckOutDate() == null) {
+                response.put("error", "Check-out date is required");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            if (booking.getCheckInDate().after(booking.getCheckOutDate()) || 
+                booking.getCheckInDate().equals(booking.getCheckOutDate())) {
+                response.put("error", "Check-out date must be after check-in date");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            booking.setId(id);
+            bookingDAO.updateBooking(booking);
+            response.put("message", "Booking updated successfully");
+            response.put("booking", booking);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("error", "Error updating booking");
             response.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }

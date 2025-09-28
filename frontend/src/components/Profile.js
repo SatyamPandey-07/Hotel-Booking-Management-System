@@ -52,7 +52,19 @@ function Profile() {
         throw new Error('User ID not available');
       }
       const response = await axios.get(`http://localhost:8080/api/customers/${user.id}`);
-      setProfile(response.data);
+      
+      // Ensure preferences object always exists
+      const profileData = {
+        ...response.data,
+        preferences: response.data.preferences || {
+          roomType: 'DOUBLE',
+          smokingPreference: 'NON_SMOKING',
+          bedType: 'QUEEN',
+          floorPreference: 'HIGH'
+        }
+      };
+      
+      setProfile(profileData);
     } catch (error) {
       console.error('Error fetching profile:', error);
       showAlert('Error loading profile from server', 'error');
@@ -374,7 +386,7 @@ function Profile() {
                 </label>
                 <select
                   name="preferences.roomType"
-                  value={profile.preferences.roomType}
+                  value={profile.preferences?.roomType || 'DOUBLE'}
                   onChange={handleInputChange}
                   disabled={!editMode}
                   style={{
@@ -399,7 +411,7 @@ function Profile() {
                 </label>
                 <select
                   name="preferences.smokingPreference"
-                  value={profile.preferences.smokingPreference}
+                  value={profile.preferences?.smokingPreference || 'NON_SMOKING'}
                   onChange={handleInputChange}
                   disabled={!editMode}
                   style={{
@@ -421,7 +433,7 @@ function Profile() {
                 </label>
                 <select
                   name="preferences.bedType"
-                  value={profile.preferences.bedType}
+                  value={profile.preferences?.bedType || 'QUEEN'}
                   onChange={handleInputChange}
                   disabled={!editMode}
                   style={{
@@ -445,7 +457,7 @@ function Profile() {
                 </label>
                 <select
                   name="preferences.floorPreference"
-                  value={profile.preferences.floorPreference}
+                  value={profile.preferences?.floorPreference || 'HIGH'}
                   onChange={handleInputChange}
                   disabled={!editMode}
                   style={{
