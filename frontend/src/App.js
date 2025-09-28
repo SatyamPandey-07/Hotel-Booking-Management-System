@@ -11,6 +11,7 @@ import Dashboard from './components/Dashboard';
 import Home from './components/Home';
 import Login from './components/Login';
 import LandingPage from './components/LandingPage';
+import Profile from './components/Profile';
 
 function Navigation() {
   const location = useLocation();
@@ -24,7 +25,7 @@ function Navigation() {
     logout();
   };
   
-  // Role-based navigation items
+  // Simplified role-based navigation items (ADMIN and USER only)
   const getNavigationItems = () => {
     const role = user?.role;
     
@@ -37,28 +38,19 @@ function Navigation() {
         ...commonItems,
         { path: '/users', label: '👤 Users', icon: '👤' },
         { path: '/customers', label: '👥 Customers', icon: '👥' },
-        { path: '/hotels', label: '🏨 Hotels', icon: '🏨' },
-        { path: '/rooms', label: '🏠 Rooms', icon: '🏠' },
+        { path: '/hotels', label: '🏨 Manage Hotels', icon: '🏨' },
+        { path: '/rooms', label: '🏠 Manage Rooms', icon: '🏠' },
         { path: '/bookings', label: '📝 All Bookings', icon: '📝' }
       ];
-    } else if (role === 'MANAGER') {
-      return [
-        ...commonItems,
-        { path: '/hotels', label: '🏨 My Hotels', icon: '🏨' },
-        { path: '/rooms', label: '🏠 Rooms', icon: '🏠' },
-        { path: '/bookings', label: '📝 Bookings', icon: '📝' },
-        { path: '/customers', label: '👥 Customers', icon: '👥' }
-      ];
-    } else if (role === 'CUSTOMER') {
+    } else { // USER/CUSTOMER role
       return [
         ...commonItems,
         { path: '/hotels', label: '🏨 Browse Hotels', icon: '🏨' },
+        { path: '/rooms', label: '🏠 Browse Rooms', icon: '�' },
         { path: '/my-bookings', label: '📝 My Bookings', icon: '📝' },
         { path: '/profile', label: '👤 My Profile', icon: '👤' }
       ];
     }
-    
-    return commonItems;
   };
   
   return (
@@ -218,47 +210,41 @@ function AppContent() {
               </ProtectedRoute>
             } />
             
-            {/* Admin and Manager routes */}
             <Route path="/customers" element={
-              <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
+              <ProtectedRoute allowedRoles={['ADMIN']}>
                 <Customers />
               </ProtectedRoute>
             } />
             
-            <Route path="/rooms" element={
-              <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
-                <Rooms />
-              </ProtectedRoute>
-            } />
-            
-            {/* Different booking views based on role */}
             <Route path="/bookings" element={
-              <ProtectedRoute allowedRoles={['ADMIN', 'MANAGER']}>
+              <ProtectedRoute allowedRoles={['ADMIN']}>
                 <Bookings />
               </ProtectedRoute>
             } />
             
-            <Route path="/my-bookings" element={
-              <ProtectedRoute allowedRoles={['CUSTOMER']}>
-                <CustomerBookings />
-              </ProtectedRoute>
-            } />
-            
-            {/* Hotels - accessible to all but with different views */}
+            {/* Hotels and Rooms - accessible to all but with different views */}
             <Route path="/hotels" element={
               <ProtectedRoute>
                 <Hotels />
               </ProtectedRoute>
             } />
             
-            {/* Customer-only routes */}
+            <Route path="/rooms" element={
+              <ProtectedRoute>
+                <Rooms />
+              </ProtectedRoute>
+            } />
+            
+            {/* User/Customer-only routes */}
+            <Route path="/my-bookings" element={
+              <ProtectedRoute allowedRoles={['CUSTOMER']}>
+                <CustomerBookings />
+              </ProtectedRoute>
+            } />
+            
             <Route path="/profile" element={
               <ProtectedRoute allowedRoles={['CUSTOMER']}>
-                <div style={{ padding: 'var(--spacing-xl)', textAlign: 'center' }}>
-                  <h2>👤 My Profile</h2>
-                  <p>Customer profile management</p>
-                  <p style={{ color: 'var(--gray-600)' }}>This feature is coming soon...</p>
-                </div>
+                <Profile />
               </ProtectedRoute>
             } />
             

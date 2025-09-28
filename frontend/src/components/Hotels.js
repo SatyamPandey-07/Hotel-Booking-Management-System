@@ -34,17 +34,16 @@ function Hotels() {
   const [searchTerm, setSearchTerm] = useState('');
   const [errors, setErrors] = useState({});
   
-  // Role-based permissions
+  // Simplified role-based permissions (ADMIN and USER only)
   const isAdmin = user?.role === 'ADMIN';
-  const isManager = user?.role === 'MANAGER';
-  const isCustomer = user?.role === 'CUSTOMER';
+  const isUser = user?.role === 'CUSTOMER' || user?.role === 'USER';
   
   // Determine what user can do
   const canAddHotels = isAdmin; // Only admin can add hotels
   const canEditHotels = isAdmin; // Only admin can edit hotels
   const canDeleteHotels = isAdmin; // Only admin can delete hotels
-  const canManageRooms = isAdmin || isManager; // Admin and Manager can manage rooms
   const canViewDetails = true; // Everyone can view hotel details
+  const canBookRooms = isUser; // Only users can book rooms
 
   useEffect(() => {
     fetchHotels();
@@ -63,7 +62,48 @@ function Hotels() {
       }
     } catch (error) {
       console.error('Error fetching hotels:', error);
-      showAlert('Failed to fetch hotels', 'error');
+      
+      // Provide mock data when backend is not available
+      const mockHotels = [
+        {
+          id: 1,
+          name: 'Grand Palace Hotel',
+          address: '123 Broadway Ave, New York, NY 10001',
+          city: 'New York',
+          country: 'USA',
+          description: 'Luxury hotel in the heart of Manhattan with world-class amenities and breathtaking city views.',
+          starRating: 5,
+          managerId: 2,
+          isActive: true
+        },
+        {
+          id: 2,
+          name: 'Seaside Resort & Spa',
+          address: '456 Ocean Drive, Miami Beach, FL 33139',
+          city: 'Miami Beach',
+          country: 'USA',
+          description: 'Beachfront resort offering pristine beaches, spa services, and gourmet dining experiences.',
+          starRating: 4,
+          managerId: 2,
+          isActive: true
+        },
+        {
+          id: 3,
+          name: 'Mountain View Lodge',
+          address: '789 Alpine Way, Aspen, CO 81611',
+          city: 'Aspen',
+          country: 'USA',
+          description: 'Cozy mountain lodge perfect for skiing and outdoor adventures with rustic charm.',
+          starRating: 4,
+          managerId: 2,
+          isActive: true
+        }
+      ];
+      
+      setHotels(mockHotels);
+      if (!error.response || error.response.status >= 500) {
+        showAlert('Using demo data - Connect to backend for live hotel data', 'warning');
+      }
     } finally {
       setLoading(false);
     }
@@ -92,9 +132,9 @@ function Hotels() {
       newErrors.starRating = 'Star rating must be between 1 and 5';
     }
     
-    // Only admin needs to assign manager
+    // Only admin needs to assign manager (simplified)
     if (isAdmin && (!hotel.managerId || parseInt(hotel.managerId) <= 0)) {
-      newErrors.managerId = 'Valid manager ID is required';
+      newErrors.managerId = 'Valid manager ID is required for admin';
     }
     
     setErrors(newErrors);
@@ -217,27 +257,23 @@ function Hotels() {
     setTimeout(() => setAlert(null), 5000);
   };
 
-  // Role-specific titles and descriptions
+  // Role-specific titles and descriptions (ADMIN and USER only)
   const getPageInfo = () => {
     switch(user?.role) {
       case 'ADMIN':
         return {
           title: '🏨 Hotel Management',
-          description: 'Manage all hotels in the system'
-        };
-      case 'MANAGER':
-        return {
-          title: '🏨 My Hotels',
-          description: 'Manage your assigned hotels'
+          description: 'Manage all hotels in the system - Add, edit, and monitor hotel properties'
         };
       case 'CUSTOMER':
+      case 'USER':
         return {
-          title: '🏨 Browse Hotels',
-          description: 'Discover and book amazing hotels'
+          title: '🏨 Discover Amazing Hotels',
+          description: 'Browse our collection of premium hotels and find your perfect stay'
         };
       default:
         return {
-          title: 'Hotels',
+          title: '🏨 Hotels',
           description: 'Hotel listings and information'
         };
     }
@@ -475,10 +511,15 @@ function Hotels() {
                               <span className="list-item-subtitle">📍 {hotel.city}, {hotel.country}</span>
                             </div>
                           )}
-                          {(isAdmin || isManager) && (
+                          {isAdmin && hotel.managerId && (
                             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
                               <UserIcon className="w-4 h-4" style={{ color: 'var(--gray-500)' }} />
                               <span className="list-item-subtitle">Manager ID: {hotel.managerId}</span>
+                            </div>
+                          )}
+                          {isUser && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)', color: 'var(--success-color)' }}>
+                              <span style={{ fontSize: '0.875rem', fontWeight: '600' }}>✨ Available for Booking</span>
                             </div>
                           )}
                         </div>
@@ -495,46 +536,77 @@ function Hotels() {
                       </div>
                       
                       <div className="list-item-actions" style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
-                        {isCustomer && (
-                          <Button 
-                            className="btn-success"
-                            style={{ minWidth: '100px' }}
-                          >
-                            🏠 View Rooms
-                          </Button>
+                        {canBookRooms && (
+                          <>
+                            <Button 
+                              className="btn-success"
+                              style={{ 
+                                minWidth: '120px',
+                                background: 'linear-gradient(135deg, #059669, #10b981)',
+                                border: 'none',
+                                color: 'white',
+                                fontWeight: '600'
+                              }}
+                              onClick={() => {
+                                // Navigate to rooms for this hotel
+                                window.location.href = `/rooms?hotelId=${hotel.id}`;
+                              }}
+                            >
+                              🏠 View Rooms
+                            </Button>
+                            <Button 
+                              variant="outline"
+                              style={{ 
+                                minWidth: '100px',
+                                borderColor: '#6366f1',
+                                color: '#6366f1'
+                              }}
+                            >
+                              ❤️ Save Hotel
+                            </Button>
+                          </>
                         )}
                         
-                        {canManageRooms && (
-                          <Button 
-                            variant="outline"
-                            style={{ minWidth: '100px' }}
-                          >
-                            🏠 Manage Rooms
-                          </Button>
-                        )}
-                        
-                        {canEditHotels && (
-                          <Button 
-                            variant="outline" 
-                            size="small"
-                            onClick={() => handleEdit(hotel)}
-                            style={{ minWidth: '80px' }}
-                          >
-                            <PencilIcon className="w-4 h-4 mr-1" />
-                            Edit
-                          </Button>
-                        )}
-                        
-                        {canDeleteHotels && (
-                          <Button 
-                            variant="danger" 
-                            size="small"
-                            onClick={() => handleDelete(hotel.id)}
-                            style={{ minWidth: '80px' }}
-                          >
-                            <TrashIcon className="w-4 h-4 mr-1" />
-                            Delete
-                          </Button>
+                        {isAdmin && (
+                          <>
+                            <Button 
+                              variant="outline"
+                              style={{ 
+                                minWidth: '120px',
+                                borderColor: '#f59e0b',
+                                color: '#f59e0b'
+                              }}
+                              onClick={() => {
+                                window.location.href = `/rooms?hotelId=${hotel.id}`;
+                              }}
+                            >
+                              🏠 Manage Rooms
+                            </Button>
+                            
+                            <Button 
+                              variant="outline" 
+                              size="small"
+                              onClick={() => handleEdit(hotel)}
+                              style={{ 
+                                minWidth: '80px',
+                                borderColor: '#6366f1',
+                                color: '#6366f1'
+                              }}
+                            >
+                              <PencilIcon className="w-4 h-4 mr-1" />
+                              Edit
+                            </Button>
+                            
+                            <Button 
+                              variant="danger" 
+                              size="small"
+                              onClick={() => handleDelete(hotel.id)}
+                              style={{ minWidth: '80px' }}
+                            >
+                              <TrashIcon className="w-4 h-4 mr-1" />
+                              Delete
+                            </Button>
+                          </>
                         )}
                       </div>
                     </div>

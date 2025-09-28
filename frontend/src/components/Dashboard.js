@@ -211,10 +211,9 @@ function Dashboard() {
     customers: [5, 8, 6, 12, 10, 7, 11]
   });
   
-  // Role-based permissions
+  // Simplified role-based permissions (ADMIN and USER only)
   const isAdmin = user?.role === 'ADMIN';
-  const isManager = user?.role === 'MANAGER';
-  const isCustomer = user?.role === 'CUSTOMER';
+  const isUser = user?.role === 'CUSTOMER' || user?.role === 'USER';
 
   useEffect(() => {
     fetchDashboardData();
@@ -242,17 +241,6 @@ function Dashboard() {
         cancelledBookings: 5,
         systemHealth: 98.5,
         activeUsers: 12
-      } : isManager ? {
-        myHotels: 1,
-        myRooms: 4,
-        myBookings: 24,
-        myRevenue: 8500,
-        pendingBookings: 3,
-        confirmedBookings: 15,
-        checkedInBookings: 4,
-        checkedOutBookings: 18,
-        hotelOccupancyRate: 75,
-        averageRating: 4.2
       } : {
         myBookings: 3,
         myTotalSpent: 1250,
@@ -261,7 +249,9 @@ function Dashboard() {
         completedBookings: 2,
         favoriteHotels: 2,
         memberSince: '2024-01-15',
-        nextBooking: 'Grand Hotel - Oct 15, 2024'
+        nextBooking: 'Grand Hotel - Oct 15, 2024',
+        availableHotels: 15,
+        specialOffers: 3
       };
       
       setStats(mockStats);
@@ -275,7 +265,7 @@ function Dashboard() {
     setTimeout(() => setAlert(null), 5000);
   };
 
-  // Role-specific dashboard configurations
+  // Role-specific dashboard configurations (ADMIN and USER only)
   const getDashboardConfig = () => {
     if (isAdmin) {
       return {
@@ -289,28 +279,16 @@ function Dashboard() {
           { label: 'System Settings', icon: Cog6ToothIcon, link: '/settings', color: 'secondary' }
         ]
       };
-    } else if (isManager) {
-      return {
-        title: '👨‍💼 Manager Dashboard',
-        subtitle: 'Hotel Operations & Management',
-        primaryColor: '#f59e0b', // Amber
-        quickActions: [
-          { label: 'Manage My Hotels', icon: BuildingOfficeIcon, link: '/hotels', color: 'warning' },
-          { label: 'Room Management', icon: EyeIcon, link: '/rooms', color: 'info' },
-          { label: 'View Bookings', icon: CalendarDaysIcon, link: '/bookings', color: 'primary' },
-          { label: 'Customer Support', icon: UserGroupIcon, link: '/customers', color: 'success' }
-        ]
-      };
     } else {
       return {
         title: '🌟 Welcome Back!',
-        subtitle: 'Your Travel Dashboard',
+        subtitle: 'Your Personal Travel Hub',
         primaryColor: '#059669', // Emerald
         quickActions: [
           { label: 'Browse Hotels', icon: BuildingOfficeIcon, link: '/hotels', color: 'primary' },
+          { label: 'Browse Rooms', icon: EyeIcon, link: '/rooms', color: 'info' },
           { label: 'My Bookings', icon: CalendarDaysIcon, link: '/my-bookings', color: 'success' },
-          { label: 'My Profile', icon: UserGroupIcon, link: '/profile', color: 'info' },
-          { label: 'Help & Support', icon: Cog6ToothIcon, link: '/help', color: 'secondary' }
+          { label: 'My Profile', icon: UserGroupIcon, link: '/profile', color: 'secondary' }
         ]
       };
     }
