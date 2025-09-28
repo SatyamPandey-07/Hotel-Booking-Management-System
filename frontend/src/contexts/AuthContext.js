@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth/validate');
       if (response.data.valid) {
-        // For token validation, we need to get user details to get the ID
+        // Get full user details including ID for API calls
         try {
           const userResponse = await axios.get(`http://localhost:8080/api/users/by-username/${response.data.username}`);
           setUser({
@@ -38,10 +38,12 @@ export const AuthProvider = ({ children }) => {
             username: response.data.username,
             role: response.data.role,
             firstName: userResponse.data.firstName,
-            lastName: userResponse.data.lastName
+            lastName: userResponse.data.lastName,
+            email: userResponse.data.email
           });
         } catch (error) {
           console.error('Error fetching user details:', error);
+          // Fallback without user ID if the endpoint fails
           setUser({
             username: response.data.username,
             role: response.data.role
