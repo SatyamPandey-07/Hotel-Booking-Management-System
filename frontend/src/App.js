@@ -12,6 +12,7 @@ import Home from './components/Home';
 import Login from './components/Login';
 import LandingPage from './components/LandingPage';
 import Profile from './components/Profile';
+import MyBookings from './components/MyBookings';
 
 function Navigation() {
   const location = useLocation();
@@ -237,13 +238,13 @@ function AppContent() {
             
             {/* User/Customer-only routes */}
             <Route path="/my-bookings" element={
-              <ProtectedRoute allowedRoles={['CUSTOMER']}>
-                <CustomerBookings />
+              <ProtectedRoute allowedRoles={['CUSTOMER', 'USER']}>
+                <MyBookings />
               </ProtectedRoute>
             } />
             
             <Route path="/profile" element={
-              <ProtectedRoute allowedRoles={['CUSTOMER']}>
+              <ProtectedRoute allowedRoles={['CUSTOMER', 'USER']}>
                 <Profile />
               </ProtectedRoute>
             } />

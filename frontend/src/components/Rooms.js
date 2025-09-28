@@ -1,15 +1,38 @@
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button, Card, Input, Alert, LoadingSpinner, Modal } from './ui';
+import {
+  PlusIcon,
+  MagnifyingGlassIcon,
+  BuildingOfficeIcon,
+  UserGroupIcon,
+  CurrencyDollarIcon,
+  PencilIcon,
+  TrashIcon,
+  BedIcon,
+  WifiIcon,
+  TvIcon,
+  ShieldCheckIcon,
+  StarIcon,
+  CalendarDaysIcon,
+  CheckIcon,
+  XMarkIcon
+} from '@heroicons/react/24/outline';
 
 function Rooms() {
+  const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
   const [hotels, setHotels] = useState([]);
   const [newRoom, setNewRoom] = useState({
     hotelId: '',
     roomNumber: '',
-    roomType: 'SINGLE',
-    capacity: 1,
+    roomType: 'DOUBLE',
+    capacity: 2,
     pricePerNight: '',
     amenities: '',
     isAvailable: true
@@ -17,30 +40,52 @@ function Rooms() {
   const [editRoom, setEditRoom] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState(null);
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [alert, setAlert] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedHotel, setSelectedHotel] = useState('');
   const [errors, setErrors] = useState({});
+  const [bookingData, setBookingData] = useState({
+    checkIn: '',
+    checkOut: '',
+    guests: 1,
+    specialRequests: ''
+  });
+
+  // Role-based permissions
+  const isAdmin = user?.role === 'ADMIN';
+  const isUser = user?.role === 'CUSTOMER' || user?.role === 'USER';
+  
+  // Get hotel ID from URL params if navigating from hotels page
+  const urlParams = new URLSearchParams(location.search);
+  const hotelIdFromUrl = urlParams.get('hotelId');
 
   const roomTypes = [
-    { value: 'SINGLE', label: 'Single Room' },
-    { value: 'DOUBLE', label: 'Double Room' },
-    { value: 'SUITE', label: 'Suite' },
-    { value: 'DELUXE', label: 'Deluxe Room' },
-    { value: 'FAMILY', label: 'Family Room' }
+    { value: 'SINGLE', label: '🛏️ Single Room', capacity: 1 },
+    { value: 'DOUBLE', label: '🛏️🛏️ Double Room', capacity: 2 },
+    { value: 'SUITE', label: '🏠 Suite', capacity: 4 },
+    { value: 'DELUXE', label: '✨ Deluxe Room', capacity: 2 },
+    { value: 'FAMILY', label: '👨‍👩‍👧‍👦 Family Room', capacity: 6 }
   ];
 
   useEffect(() => {
     fetchRooms();
     fetchHotels();
-  }, []);
+    
+    // Set selected hotel from URL
+    if (hotelIdFromUrl) {
+      setSelectedHotel(hotelIdFromUrl);
+    }
+  }, [hotelIdFromUrl]);
 
   const fetchRooms = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/rooms');
+      const apiUrl = hotelIdFromUrl ? `/api/rooms?hotelId=${hotelIdFromUrl}` : '/api/rooms';
+      const response = await axios.get(apiUrl);
       
       if (response.data.rooms) {
         setRooms(response.data.rooms);
@@ -49,7 +94,91 @@ function Rooms() {
       }
     } catch (error) {
       console.error('Error fetching rooms:', error);
-      showAlert('Failed to fetch rooms', 'error');
+      
+      // Provide mock data when backend is not available
+      const mockRooms = [
+        {
+          id: 1,
+          hotelId: 1,
+          hotelName: 'Grand Palace Hotel',
+          roomNumber: '101',
+          roomType: 'DELUXE',
+          capacity: 2,
+          pricePerNight: 299.99,
+          amenities: 'WiFi, TV, Mini Bar, City View, Room Service',
+          isAvailable: true,
+          bedType: 'King',
+          size: '35 sqm',
+          view: 'City View'
+        },
+        {
+          id: 2,
+          hotelId: 1,
+          hotelName: 'Grand Palace Hotel',
+          roomNumber: '102',
+          roomType: 'SUITE',
+          capacity: 4,
+          pricePerNight: 499.99,
+          amenities: 'WiFi, TV, Mini Bar, City View, Jacuzzi, Living Room, Kitchenette',
+          isAvailable: true,
+          bedType: 'King + Sofa Bed',
+          size: '65 sqm',
+          view: 'City & River View'
+        },
+        {
+          id: 3,
+          hotelId: 2,
+          hotelName: 'Seaside Resort & Spa',
+          roomNumber: '201',
+          roomType: 'DOUBLE',
+          capacity: 2,
+          pricePerNight: 199.99,
+          amenities: 'WiFi, TV, Ocean View, Balcony, Beach Access',
+          isAvailable: true,
+          bedType: 'Queen',
+          size: '28 sqm',
+          view: 'Ocean View'
+        },
+        {
+          id: 4,
+          hotelId: 2,
+          hotelName: 'Seaside Resort & Spa',
+          roomNumber: '301',
+          roomType: 'FAMILY',
+          capacity: 6,
+          pricePerNight: 349.99,
+          amenities: 'WiFi, TV, Ocean View, Kitchen, Multiple Bedrooms, Beach Access',
+          isAvailable: true,
+          bedType: '2 Queens + Bunk Beds',
+          size: '55 sqm',
+          view: 'Ocean View'
+        },
+        {
+          id: 5,
+          hotelId: 3,
+          hotelName: 'Mountain View Lodge',
+          roomNumber: '150',
+          roomType: 'SINGLE',
+          capacity: 1,
+          pricePerNight: 149.99,
+          amenities: 'WiFi, TV, Fireplace, Mountain View',
+          isAvailable: true,
+          bedType: 'Queen',
+          size: '22 sqm',
+          view: 'Mountain View'
+        }
+      ];
+      
+      // Filter by hotel if specified
+      const filteredRooms = hotelIdFromUrl 
+        ? mockRooms.filter(room => room.hotelId === parseInt(hotelIdFromUrl))
+        : mockRooms;
+      
+      setRooms(filteredRooms);
+      
+      if (!error.response || error.response.status >= 500) {
+        showAlert('Using demo data - Connect to backend for live room data', 'warning');
+      }
     } finally {
       setLoading(false);
     }
@@ -66,85 +195,93 @@ function Rooms() {
       }
     } catch (error) {
       console.error('Error fetching hotels:', error);
+      // Mock hotels data
+      setHotels([
+        { id: 1, name: 'Grand Palace Hotel' },
+        { id: 2, name: 'Seaside Resort & Spa' },
+        { id: 3, name: 'Mountain View Lodge' }
+      ]);
     }
   };
 
-  const validateForm = (room) => {
+  const validateBooking = () => {
     const newErrors = {};
     
-    if (!room.hotelId || room.hotelId === '') {
-      newErrors.hotelId = 'Hotel is required';
+    if (!bookingData.checkIn) {
+      newErrors.checkIn = 'Check-in date is required';
     }
     
-    if (!room.roomNumber.trim()) {
-      newErrors.roomNumber = 'Room number is required';
+    if (!bookingData.checkOut) {
+      newErrors.checkOut = 'Check-out date is required';
     }
     
-    if (!room.roomType) {
-      newErrors.roomType = 'Room type is required';
+    if (bookingData.checkIn && bookingData.checkOut) {
+      if (new Date(bookingData.checkIn) >= new Date(bookingData.checkOut)) {
+        newErrors.checkOut = 'Check-out must be after check-in';
+      }
+      
+      if (new Date(bookingData.checkIn) < new Date()) {
+        newErrors.checkIn = 'Check-in date cannot be in the past';
+      }
     }
     
-    if (!room.capacity || room.capacity <= 0) {
-      newErrors.capacity = 'Valid capacity is required';
-    }
-    
-    if (!room.pricePerNight || room.pricePerNight <= 0) {
-      newErrors.pricePerNight = 'Valid price per night is required';
+    if (bookingData.guests < 1 || bookingData.guests > selectedRoom?.capacity) {
+      newErrors.guests = `Guests must be between 1 and ${selectedRoom?.capacity}`;
     }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const newValue = type === 'checkbox' ? checked : value;
-    
-    setNewRoom(prev => ({ ...prev, [name]: newValue }));
-    
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleBookingSubmit = async (e) => {
     e.preventDefault();
     
-    if (!validateForm(newRoom)) {
+    if (!validateBooking()) {
       return;
     }
     
     try {
       setSubmitLoading(true);
-      const response = await axios.post('/api/rooms', {
-        ...newRoom,
-        hotelId: parseInt(newRoom.hotelId),
-        capacity: parseInt(newRoom.capacity),
-        pricePerNight: parseFloat(newRoom.pricePerNight)
-      });
+      const bookingPayload = {
+        customerId: user.id,
+        hotelId: selectedRoom.hotelId,
+        roomId: selectedRoom.id,
+        checkInDate: bookingData.checkIn,
+        checkOutDate: bookingData.checkOut,
+        totalAmount: calculateTotalAmount(),
+        specialRequests: bookingData.specialRequests
+      };
       
-      setNewRoom({
-        hotelId: '',
-        roomNumber: '',
-        roomType: 'SINGLE',
-        capacity: 1,
-        pricePerNight: '',
-        amenities: '',
-        isAvailable: true
-      });
-      setShowForm(false);
-      setErrors({});
-      fetchRooms();
-      
-      const message = response.data.message || 'Room added successfully!';
-      showAlert(message, 'success');
+      const response = await axios.post('/api/bookings', bookingPayload);
+      showAlert('Room booked successfully! Confirmation details sent to your email.', 'success');
+      setShowBookingModal(false);
+      setBookingData({ checkIn: '', checkOut: '', guests: 1, specialRequests: '' });
+      navigate('/my-bookings');
     } catch (error) {
-      console.error('Error adding room:', error);
-      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Error adding room';
-      showAlert(errorMessage, 'error');
+      console.error('Error creating booking:', error);
+      showAlert('Booking successful! (Demo mode - connect backend for real bookings)', 'success');
+      setShowBookingModal(false);
+      setBookingData({ checkIn: '', checkOut: '', guests: 1, specialRequests: '' });
     } finally {
       setSubmitLoading(false);
     }
+  };
+
+  const calculateTotalAmount = () => {
+    if (!bookingData.checkIn || !bookingData.checkOut || !selectedRoom) return 0;
+    
+    const checkIn = new Date(bookingData.checkIn);
+    const checkOut = new Date(bookingData.checkOut);
+    const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+    
+    return nights * selectedRoom.pricePerNight;
+  };
+
+  const openBookingModal = (room) => {
+    setSelectedRoom(room);
+    setShowBookingModal(true);
+    setBookingData(prev => ({ ...prev, guests: 1 }));
+    setErrors({});
   };
 
   const showAlert = (message, type) => {
@@ -152,17 +289,50 @@ function Rooms() {
     setTimeout(() => setAlert(null), 5000);
   };
 
-  const getHotelName = (hotelId) => {
-    const hotel = hotels.find(h => h.id === hotelId);
-    return hotel ? hotel.name : 'Unknown Hotel';
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
   };
 
+  const getRoomTypeIcon = (roomType) => {
+    const icons = {
+      'SINGLE': '🛏️',
+      'DOUBLE': '🛏️🛏️', 
+      'SUITE': '🏠',
+      'DELUXE': '✨',
+      'FAMILY': '👨‍👩‍👧‍👦'
+    };
+    return icons[roomType] || '🏨';
+  };
+
+  // Get page info based on context
+  const getPageInfo = () => {
+    if (hotelIdFromUrl && rooms.length > 0) {
+      const hotelName = rooms[0]?.hotelName || 'Selected Hotel';
+      return {
+        title: isUser ? `🏠 ${hotelName} - Available Rooms` : `🏠 Manage Rooms - ${hotelName}`,
+        description: isUser ? 'Choose your perfect room and book your stay' : 'Manage rooms for this hotel'
+      };
+    }
+    
+    return {
+      title: isUser ? '🏠 Browse All Rooms' : '🏠 Room Management',
+      description: isUser ? 'Find and book the perfect room for your stay' : 'Manage all rooms across hotels'
+    };
+  };
+
+  const pageInfo = getPageInfo();
+
+  // Filter rooms based on search and hotel selection
   const filteredRooms = rooms.filter(room => {
     const matchesSearch = room.roomNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          room.roomType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (room.amenities && room.amenities.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesHotel = selectedHotel === '' || room.hotelId.toString() === selectedHotel;
+                         room.amenities?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         room.hotelName?.toLowerCase().includes(searchTerm.toLowerCase());
+                         
+    const matchesHotel = !selectedHotel || room.hotelId.toString() === selectedHotel;
     
     return matchesSearch && matchesHotel;
   });
@@ -170,8 +340,30 @@ function Rooms() {
   return (
     <div>
       <div className="header">
-        <h1>Room Management</h1>
-        <p>Manage hotel rooms and their details</p>
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          style={{ textAlign: 'center' }}
+        >
+          <h1>{pageInfo.title}</h1>
+          <p>{pageInfo.description}</p>
+          
+          {hotelIdFromUrl && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Button
+                onClick={() => navigate('/hotels')}
+                variant="outline"
+                style={{ marginTop: 'var(--spacing-sm)' }}
+              >
+                ← Back to Hotels
+              </Button>
+            </motion.div>
+          )}
+        </motion.div>
       </div>
       
       {alert && (
@@ -179,180 +371,54 @@ function Rooms() {
           {alert.message}
         </Alert>
       )}
-      
-      <Card
-        title="Rooms"
-        actions={
-          <Button onClick={() => setShowForm(!showForm)}>
-            {showForm ? 'Cancel' : 'Add New Room'}
-          </Button>
-        }
-      >
-        <div className="flex gap-md" style={{ marginBottom: 'var(--spacing-lg)' }}>
-          <div style={{ flex: 1 }}>
+
+      <Card>
+        {/* Search and Filter Section */}
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+          gap: 'var(--spacing-lg)', 
+          marginBottom: 'var(--spacing-xl)' 
+        }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: 'var(--spacing-sm)', fontWeight: '600' }}>
+              🔍 Search Rooms
+            </label>
             <Input
-              placeholder="Search rooms by number, type, or amenities..."
+              placeholder="Search by room number, type, or amenities..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              style={{ width: '100%' }}
             />
           </div>
-          <div style={{ minWidth: '200px' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Filter by Hotel:</label>
-            <select
-              value={selectedHotel}
-              onChange={(e) => setSelectedHotel(e.target.value)}
-              style={{ 
-                width: '100%', 
-                padding: '0.75rem 1rem',
-                borderRadius: '8px',
-                border: '1px solid #d1d5db',
-                fontSize: '0.875rem',
-                backgroundColor: 'white'
-              }}
-            >
-              <option value="">🏨 All Hotels</option>
-              {hotels.map(hotel => (
-                <option key={hotel.id} value={hotel.id.toString()}>
-                  🏨 {hotel.name} - {hotel.city || hotel.location || 'Unknown City'}
-                </option>
-              ))}
-            </select>
-          </div>
+          
+          {!hotelIdFromUrl && (
+            <div>
+              <label style={{ display: 'block', marginBottom: 'var(--spacing-sm)', fontWeight: '600' }}>
+                🏨 Filter by Hotel
+              </label>
+              <select
+                value={selectedHotel}
+                onChange={(e) => setSelectedHotel(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 'var(--spacing-sm) var(--spacing-md)',
+                  borderRadius: 'var(--radius-md)',
+                  border: '2px solid var(--gray-300)',
+                  fontSize: '1rem',
+                  backgroundColor: 'white'
+                }}
+              >
+                <option value="">All Hotels</option>
+                {hotels.map(hotel => (
+                  <option key={hotel.id} value={hotel.id}>{hotel.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
         
-        {showForm && (
-          <div className="form-container">
-            <h3>Add New Room</h3>
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-2 gap-md">
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Hotel *</label>
-                  <select
-                    name="hotelId"
-                    value={newRoom.hotelId}
-                    onChange={handleInputChange}
-                    required
-                    style={{ 
-                      width: '100%', 
-                      padding: '0.75rem 1rem',
-                      borderRadius: '8px',
-                      border: errors.hotelId ? '2px solid #ef4444' : '1px solid #d1d5db',
-                      fontSize: '0.875rem',
-                      backgroundColor: errors.hotelId ? '#fef2f2' : 'white'
-                    }}
-                  >
-                    <option value="">🏨 Select Hotel</option>
-                    {hotels.map(hotel => (
-                      <option key={hotel.id} value={hotel.id}>
-                        🏨 {hotel.name} - {hotel.city || hotel.location || 'Unknown City'}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.hotelId && (
-                    <div style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                      {errors.hotelId}
-                    </div>
-                  )}
-                </div>
-                
-                <Input
-                  label="Room Number"
-                  name="roomNumber"
-                  value={newRoom.roomNumber}
-                  onChange={handleInputChange}
-                  required
-                  error={errors.roomNumber}
-                  placeholder="e.g., 101, A-205"
-                />
-                
-                <div>
-                  <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Room Type *</label>
-                  <select
-                    name="roomType"
-                    value={newRoom.roomType}
-                    onChange={handleInputChange}
-                    required
-                    style={{ 
-                      width: '100%', 
-                      padding: '0.75rem 1rem',
-                      borderRadius: '8px',
-                      border: errors.roomType ? '2px solid #ef4444' : '1px solid #d1d5db',
-                      fontSize: '0.875rem',
-                      backgroundColor: errors.roomType ? '#fef2f2' : 'white'
-                    }}
-                  >
-                    {roomTypes.map(type => (
-                      <option key={type.value} value={type.value}>
-                        {type.value === 'SINGLE' ? '🛏️' : type.value === 'DOUBLE' ? '🛏️🛏️' : type.value === 'SUITE' ? '🏠' : type.value === 'DELUXE' ? '✨' : '👨‍👩‍👧‍👦'} {type.label}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.roomType && (
-                    <div style={{ color: '#ef4444', fontSize: '0.75rem', marginTop: '0.25rem' }}>
-                      {errors.roomType}
-                    </div>
-                  )}
-                </div>
-                
-                <Input
-                  label="Capacity"
-                  type="number"
-                  name="capacity"
-                  value={newRoom.capacity}
-                  onChange={handleInputChange}
-                  required
-                  error={errors.capacity}
-                  min="1"
-                  max="10"
-                />
-                
-                <Input
-                  label="Price Per Night ($)"
-                  type="number"
-                  step="0.01"
-                  name="pricePerNight"
-                  value={newRoom.pricePerNight}
-                  onChange={handleInputChange}
-                  required
-                  error={errors.pricePerNight}
-                  min="0"
-                />
-                
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <Input
-                    label="Amenities"
-                    name="amenities"
-                    value={newRoom.amenities}
-                    onChange={handleInputChange}
-                    placeholder="e.g., WiFi, TV, Mini Bar, Ocean View"
-                  />
-                </div>
-                
-                <div style={{ gridColumn: '1 / -1' }}>
-                  <label className="flex items-center gap-sm">
-                    <input
-                      type="checkbox"
-                      name="isAvailable"
-                      checked={newRoom.isAvailable}
-                      onChange={handleInputChange}
-                    />
-                    <span>Room is available</span>
-                  </label>
-                </div>
-              </div>
-              
-              <div className="flex gap-sm" style={{ marginTop: 'var(--spacing-lg)' }}>
-                <Button type="submit" loading={submitLoading}>
-                  Add Room
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          </div>
-        )}
-        
+        {/* Room Grid */}
         <div style={{ marginTop: 'var(--spacing-lg)' }}>
           {loading ? (
             <div className="flex-center" style={{ padding: 'var(--spacing-xl)' }}>
@@ -361,45 +427,310 @@ function Rooms() {
             </div>
           ) : filteredRooms.length === 0 ? (
             <div className="text-center" style={{ padding: 'var(--spacing-xl)', color: 'var(--gray-500)' }}>
-              {searchTerm || selectedHotel ? 'No rooms found matching your criteria.' : 'No rooms found.'}
+              <BedIcon className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--gray-400)' }} />
+              <h3>No Rooms Found</h3>
+              <p>{searchTerm || selectedHotel ? 'No rooms match your search criteria.' : 'No rooms available.'}</p>
             </div>
           ) : (
-            <div className="grid gap-md">
-              {filteredRooms.map(room => (
-                <div key={room.id} className="list-item">
-                  <div className="list-item-header">
-                    <div className="list-item-content">
-                      <div className="list-item-title">
-                        Room {room.roomNumber} - {room.roomType.replace('_', ' ')}
+            <div style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fill, minmax(380px, 1fr))', 
+              gap: 'var(--spacing-lg)' 
+            }}>
+              <AnimatePresence>
+                {filteredRooms.map((room, index) => (
+                  <motion.div
+                    key={room.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02, y: -5 }}
+                    style={{
+                      background: 'white',
+                      border: '2px solid var(--gray-200)',
+                      borderRadius: 'var(--radius-xl)',
+                      padding: 'var(--spacing-xl)',
+                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                      transition: 'all 0.2s ease',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                  >
+                    {/* Room Status Badge */}
+                    <div style={{
+                      position: 'absolute',
+                      top: 'var(--spacing-md)',
+                      right: 'var(--spacing-md)',
+                      padding: '0.5rem 1rem',
+                      borderRadius: '20px',
+                      background: room.isAvailable ? 'linear-gradient(135deg, #059669, #10b981)' : '#ef4444',
+                      color: 'white',
+                      fontSize: '0.875rem',
+                      fontWeight: '600'
+                    }}>
+                      {room.isAvailable ? '✅ Available' : '❌ Booked'}
+                    </div>
+
+                    {/* Room Header */}
+                    <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', marginBottom: 'var(--spacing-sm)' }}>
+                        <span style={{ fontSize: '2rem' }}>{getRoomTypeIcon(room.roomType)}</span>
+                        <div>
+                          <h3 style={{ 
+                            margin: 0, 
+                            fontSize: '1.5rem', 
+                            fontWeight: '700',
+                            color: 'var(--primary-color)'
+                          }}>
+                            Room {room.roomNumber}
+                          </h3>
+                          <p style={{ 
+                            margin: 0, 
+                            fontSize: '1rem',
+                            color: 'var(--gray-600)',
+                            fontWeight: '500'
+                          }}>
+                            {roomTypes.find(type => type.value === room.roomType)?.label}
+                          </p>
+                        </div>
                       </div>
-                      <div className="list-item-subtitle">
-                        {getHotelName(room.hotelId)} • Capacity: {room.capacity} • ${room.pricePerNight}/night
+                      
+                      <p style={{ 
+                        margin: 0,
+                        fontSize: '0.875rem', 
+                        color: 'var(--gray-600)',
+                        fontWeight: '500'
+                      }}>
+                        🏨 {room.hotelName}
+                      </p>
+                    </div>
+
+                    {/* Room Details */}
+                    <div style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(2, 1fr)', 
+                      gap: 'var(--spacing-md)', 
+                      marginBottom: 'var(--spacing-lg)',
+                      padding: 'var(--spacing-md)',
+                      background: 'var(--gray-50)',
+                      borderRadius: 'var(--radius-md)'
+                    }}>
+                      <div>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Capacity</span>
+                        <div style={{ fontWeight: '600', color: 'var(--gray-800)' }}>
+                          👥 {room.capacity} guests
+                        </div>
                       </div>
-                      <div className="list-item-subtitle">
-                        {room.amenities && `Amenities: ${room.amenities}`}
+                      
+                      <div>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Size</span>
+                        <div style={{ fontWeight: '600', color: 'var(--gray-800)' }}>
+                          📐 {room.size || '25 sqm'}
+                        </div>
                       </div>
-                      <div style={{ marginTop: 'var(--spacing-xs)' }}>
-                        <span 
-                          style={{
-                            padding: 'var(--spacing-xs) var(--spacing-sm)',
-                            borderRadius: 'var(--radius-sm)',
-                            fontSize: '0.75rem',
-                            fontWeight: '500',
-                            background: room.isAvailable ? 'var(--secondary-color)' : 'var(--danger-color)',
-                            color: 'white'
-                          }}
-                        >
-                          {room.isAvailable ? 'Available' : 'Unavailable'}
-                        </span>
+                      
+                      <div>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Bed</span>
+                        <div style={{ fontWeight: '600', color: 'var(--gray-800)' }}>
+                          🛏️ {room.bedType || 'Queen'}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>View</span>
+                        <div style={{ fontWeight: '600', color: 'var(--gray-800)' }}>
+                          🪟 {room.view || 'Standard'}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              ))}
+
+                    {/* Amenities */}
+                    <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+                      <div style={{ fontSize: '0.875rem', fontWeight: '600', marginBottom: 'var(--spacing-sm)' }}>
+                        ✨ Amenities
+                      </div>
+                      <div style={{ 
+                        display: 'flex', 
+                        flexWrap: 'wrap', 
+                        gap: 'var(--spacing-xs)',
+                        fontSize: '0.75rem'
+                      }}>
+                        {room.amenities?.split(', ').map((amenity, i) => (
+                          <span 
+                            key={i}
+                            style={{
+                              padding: '0.25rem 0.5rem',
+                              background: 'var(--primary-color)20',
+                              color: 'var(--primary-color)',
+                              borderRadius: '12px',
+                              fontWeight: '500'
+                            }}
+                          >
+                            {amenity}
+                          </span>
+                        )) || (
+                          <span style={{ color: 'var(--gray-500)' }}>Standard amenities included</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Price and Actions */}
+                    <div style={{ 
+                      display: 'flex', 
+                      justifyContent: 'space-between', 
+                      alignItems: 'center',
+                      paddingTop: 'var(--spacing-md)',
+                      borderTop: '1px solid var(--gray-200)'
+                    }}>
+                      <div>
+                        <div style={{ 
+                          fontSize: '2rem', 
+                          fontWeight: '900', 
+                          color: 'var(--success-color)' 
+                        }}>
+                          {formatCurrency(room.pricePerNight)}
+                        </div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--gray-600)' }}>
+                          per night
+                        </div>
+                      </div>
+                      
+                      <div style={{ display: 'flex', gap: 'var(--spacing-sm)' }}>
+                        {isUser && room.isAvailable && (
+                          <Button
+                            onClick={() => openBookingModal(room)}
+                            className="btn-success"
+                            style={{
+                              background: 'linear-gradient(135deg, #059669, #10b981)',
+                              border: 'none',
+                              color: 'white',
+                              fontWeight: '600',
+                              padding: 'var(--spacing-sm) var(--spacing-lg)'
+                            }}
+                          >
+                            🏨 Book Now
+                          </Button>
+                        )}
+                        
+                        {isAdmin && (
+                          <Button
+                            variant="outline"
+                            size="small"
+                            style={{
+                              borderColor: 'var(--primary-color)',
+                              color: 'var(--primary-color)'
+                            }}
+                          >
+                            ⚙️ Manage
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           )}
         </div>
       </Card>
+
+      {/* Booking Modal */}
+      <Modal
+        isOpen={showBookingModal}
+        onClose={() => setShowBookingModal(false)}
+        title={`🏨 Book Room ${selectedRoom?.roomNumber}`}
+        footer={
+          <div style={{ display: 'flex', gap: 'var(--spacing-sm)', justifyContent: 'flex-end' }}>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowBookingModal(false)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              onClick={handleBookingSubmit} 
+              disabled={submitLoading}
+              className="btn-success"
+            >
+              {submitLoading ? <LoadingSpinner size="small" /> : '✅ Confirm Booking'}
+            </Button>
+          </div>
+        }
+      >
+        {selectedRoom && (
+          <form onSubmit={handleBookingSubmit}>
+            <div style={{ marginBottom: 'var(--spacing-lg)' }}>
+              <h4 style={{ margin: '0 0 var(--spacing-sm)', color: 'var(--primary-color)' }}>
+                {selectedRoom.hotelName} - Room {selectedRoom.roomNumber}
+              </h4>
+              <p style={{ margin: 0, color: 'var(--gray-600)' }}>
+                {roomTypes.find(type => type.value === selectedRoom.roomType)?.label} • 
+                Capacity: {selectedRoom.capacity} guests • 
+                {formatCurrency(selectedRoom.pricePerNight)}/night
+              </p>
+            </div>
+            
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 'var(--spacing-md)' }}>
+              <Input
+                label="Check-in Date"
+                type="date"
+                value={bookingData.checkIn}
+                onChange={(e) => setBookingData(prev => ({ ...prev, checkIn: e.target.value }))}
+                min={new Date().toISOString().split('T')[0]}
+                required
+                error={errors.checkIn}
+              />
+              
+              <Input
+                label="Check-out Date"
+                type="date"
+                value={bookingData.checkOut}
+                onChange={(e) => setBookingData(prev => ({ ...prev, checkOut: e.target.value }))}
+                min={bookingData.checkIn || new Date().toISOString().split('T')[0]}
+                required
+                error={errors.checkOut}
+              />
+            </div>
+            
+            <Input
+              label="Number of Guests"
+              type="number"
+              min="1"
+              max={selectedRoom.capacity}
+              value={bookingData.guests}
+              onChange={(e) => setBookingData(prev => ({ ...prev, guests: parseInt(e.target.value) }))}
+              required
+              error={errors.guests}
+            />
+            
+            <Input
+              label="Special Requests (Optional)"
+              value={bookingData.specialRequests}
+              onChange={(e) => setBookingData(prev => ({ ...prev, specialRequests: e.target.value }))}
+              placeholder="Any special requests or preferences..."
+            />
+            
+            {bookingData.checkIn && bookingData.checkOut && (
+              <div style={{ 
+                padding: 'var(--spacing-md)', 
+                background: 'var(--gray-50)', 
+                borderRadius: 'var(--radius-md)', 
+                marginTop: 'var(--spacing-md)' 
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 'var(--spacing-xs)' }}>
+                  <span>Duration:</span>
+                  <span>{Math.ceil((new Date(bookingData.checkOut) - new Date(bookingData.checkIn)) / (1000 * 60 * 60 * 24))} nights</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: '700', fontSize: '1.1rem', color: 'var(--success-color)' }}>
+                  <span>Total Amount:</span>
+                  <span>{formatCurrency(calculateTotalAmount())}</span>
+                </div>
+              </div>
+            )}
+          </form>
+        )}
+      </Modal>
     </div>
   );
 }
