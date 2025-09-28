@@ -82,19 +82,42 @@ function Rooms() {
     }
   }, [hotelIdFromUrl]);
 
+  // Re-fetch rooms when selected hotel changes
+  useEffect(() => {
+    fetchRooms();
+  }, [selectedHotel]);
+
   const fetchRooms = async () => {
     try {
       setLoading(true);
-      const apiUrl = hotelIdFromUrl ? `http://localhost:8080/api/rooms?hotelId=${hotelIdFromUrl}` : 'http://localhost:8080/api/rooms';
-      console.log('Fetching rooms from:', apiUrl);
-      const response = await axios.get(apiUrl);
-      console.log('Rooms response:', response.data);
+      // Always use hotel-specific endpoint when a hotel is selected, otherwise get all hotels' rooms
+      let allRooms = [];
       
-      if (response.data.rooms) {
-        setRooms(response.data.rooms);
+      if (selectedHotel) {
+        // Fetch rooms for the selected hotel only
+        const response = await axios.get(`http://localhost:8080/api/rooms/hotel/${selectedHotel}`);
+        console.log('Rooms response for hotel:', selectedHotel, response.data);
+        if (response.data.rooms) {
+          allRooms = response.data.rooms;
+        }
       } else {
-        setRooms(response.data);
+        // Fetch rooms from all hotels using hotel-specific endpoints (workaround for getAllRooms bug)
+        const hotelsResponse = await axios.get('http://localhost:8080/api/hotels');
+        const hotels = hotelsResponse.data.hotels || hotelsResponse.data;
+        
+        for (const hotel of hotels) {
+          try {
+            const response = await axios.get(`http://localhost:8080/api/rooms/hotel/${hotel.id}`);
+            if (response.data.rooms) {
+              allRooms = [...allRooms, ...response.data.rooms];
+            }
+          } catch (error) {
+            console.warn(`Failed to fetch rooms for hotel ${hotel.id}:`, error);
+          }
+        }
       }
+      
+      setRooms(allRooms);
     } catch (error) {
       console.error('Error fetching rooms:', error);
       showAlert('Error connecting to server. Please ensure backend is running on port 8080.', 'error');
