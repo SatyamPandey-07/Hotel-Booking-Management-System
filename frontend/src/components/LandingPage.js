@@ -330,7 +330,7 @@ function LandingPage() {
                   }}
                 >
                   <ChevronRightIcon className="w-5 h-5 mr-2" />
-                  Launch Platform
+                  Sign In to Continue
                 </Button>
               </Link>
             </motion.div>
@@ -806,7 +806,7 @@ function LandingPage() {
                     letterSpacing: '1px'
                   }}
                 >
-                  🚀 Get Started Now
+                  🚀 Sign In to Get Started
                 </Button>
               </Link>
             </motion.div>

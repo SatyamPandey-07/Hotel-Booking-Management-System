@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import ThemeWrapper, { ThemedCard, ThemedHeader } from './ThemeWrapper';
-import { LoadingSpinner, Alert, Card } from './ui';
+import { LoadingSpinner, Alert, Card, Button } from './ui';
 import {
   ChartBarIcon,
   CurrencyDollarIcon,
@@ -13,7 +14,10 @@ import {
   ClockIcon,
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
-  StarIcon
+  StarIcon,
+  PlusIcon,
+  EyeIcon,
+  Cog6ToothIcon
 } from '@heroicons/react/24/outline';
 import * as THREE from 'three';
 
@@ -206,6 +210,11 @@ function Dashboard() {
     revenue: [1200, 1900, 1500, 2500, 2200, 1800, 2400],
     customers: [5, 8, 6, 12, 10, 7, 11]
   });
+  
+  // Role-based permissions
+  const isAdmin = user?.role === 'ADMIN';
+  const isManager = user?.role === 'MANAGER';
+  const isCustomer = user?.role === 'CUSTOMER';
 
   useEffect(() => {
     fetchDashboardData();
@@ -218,23 +227,44 @@ function Dashboard() {
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
-      // Mock data for demo
-      setStats({
+      // Mock data for demo based on user role
+      const mockStats = isAdmin ? {
         totalBookings: 125,
         totalRevenue: 45000,
         totalHotels: 3,
         totalCustomers: 89,
         totalRooms: 12,
-        myBookings: 3,
-        myTotalSpent: 1250,
-        loyaltyPoints: 150,
-        upcomingBookings: 1,
+        totalUsers: 15,
         pendingBookings: 8,
         confirmedBookings: 45,
         checkedInBookings: 12,
         checkedOutBookings: 60,
-        cancelledBookings: 5
-      });
+        cancelledBookings: 5,
+        systemHealth: 98.5,
+        activeUsers: 12
+      } : isManager ? {
+        myHotels: 1,
+        myRooms: 4,
+        myBookings: 24,
+        myRevenue: 8500,
+        pendingBookings: 3,
+        confirmedBookings: 15,
+        checkedInBookings: 4,
+        checkedOutBookings: 18,
+        hotelOccupancyRate: 75,
+        averageRating: 4.2
+      } : {
+        myBookings: 3,
+        myTotalSpent: 1250,
+        loyaltyPoints: 150,
+        upcomingBookings: 1,
+        completedBookings: 2,
+        favoriteHotels: 2,
+        memberSince: '2024-01-15',
+        nextBooking: 'Grand Hotel - Oct 15, 2024'
+      };
+      
+      setStats(mockStats);
     } finally {
       setLoading(false);
     }
@@ -244,6 +274,49 @@ function Dashboard() {
     setAlert({ message, type });
     setTimeout(() => setAlert(null), 5000);
   };
+
+  // Role-specific dashboard configurations
+  const getDashboardConfig = () => {
+    if (isAdmin) {
+      return {
+        title: '🛡️ Admin Dashboard',
+        subtitle: 'System Overview & Management',
+        primaryColor: '#dc2626', // Red
+        quickActions: [
+          { label: 'Add New Hotel', icon: PlusIcon, link: '/hotels', color: 'success' },
+          { label: 'Manage Users', icon: UserGroupIcon, link: '/users', color: 'info' },
+          { label: 'View All Bookings', icon: CalendarDaysIcon, link: '/bookings', color: 'primary' },
+          { label: 'System Settings', icon: Cog6ToothIcon, link: '/settings', color: 'secondary' }
+        ]
+      };
+    } else if (isManager) {
+      return {
+        title: '👨‍💼 Manager Dashboard',
+        subtitle: 'Hotel Operations & Management',
+        primaryColor: '#f59e0b', // Amber
+        quickActions: [
+          { label: 'Manage My Hotels', icon: BuildingOfficeIcon, link: '/hotels', color: 'warning' },
+          { label: 'Room Management', icon: EyeIcon, link: '/rooms', color: 'info' },
+          { label: 'View Bookings', icon: CalendarDaysIcon, link: '/bookings', color: 'primary' },
+          { label: 'Customer Support', icon: UserGroupIcon, link: '/customers', color: 'success' }
+        ]
+      };
+    } else {
+      return {
+        title: '🌟 Welcome Back!',
+        subtitle: 'Your Travel Dashboard',
+        primaryColor: '#059669', // Emerald
+        quickActions: [
+          { label: 'Browse Hotels', icon: BuildingOfficeIcon, link: '/hotels', color: 'primary' },
+          { label: 'My Bookings', icon: CalendarDaysIcon, link: '/my-bookings', color: 'success' },
+          { label: 'My Profile', icon: UserGroupIcon, link: '/profile', color: 'info' },
+          { label: 'Help & Support', icon: Cog6ToothIcon, link: '/help', color: 'secondary' }
+        ]
+      };
+    }
+  };
+
+  const config = getDashboardConfig();
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
@@ -517,48 +590,151 @@ function Dashboard() {
           )}
         </AnimatePresence>
 
-        {/* Simplified Header */}
+        {/* Role-Based Header */}
         <motion.div 
           className="header"
           style={{
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '12px',
+            background: `linear-gradient(135deg, ${config.primaryColor}15, ${config.primaryColor}25)`,
+            border: `2px solid ${config.primaryColor}30`,
+            borderRadius: '20px',
             color: '#1f2937',
             textAlign: 'center',
-            padding: '2rem',
+            padding: '3rem 2rem',
             marginBottom: '2rem',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+            position: 'relative',
+            overflow: 'hidden'
           }}
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <motion.h1
-            style={{ 
-              margin: 0, 
-              fontSize: 'clamp(2rem, 5vw, 3rem)',
-              fontWeight: '800',
-              color: '#1f2937'
-            }}
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-          >
-            {dashboardInfo.title}
-          </motion.h1>
-          <motion.p
-            style={{
-              margin: '1rem 0 0 0',
-              fontSize: '1.1rem',
-              color: '#6b7280'
-            }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-          >
-            {dashboardInfo.description}
-          </motion.p>
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: `linear-gradient(45deg, ${config.primaryColor}05, transparent, ${config.primaryColor}05)`,
+            zIndex: 0
+          }} />
+          
+          <div style={{ position: 'relative', zIndex: 1 }}>
+            <motion.h1
+              style={{ 
+                margin: 0, 
+                fontSize: 'clamp(2rem, 5vw, 3.5rem)',
+                fontWeight: '900',
+                background: `linear-gradient(135deg, ${config.primaryColor}, ${config.primaryColor}80)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                marginBottom: '1rem'
+              }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              {config.title}
+            </motion.h1>
+            
+            <motion.p
+              style={{
+                margin: 0,
+                fontSize: '1.2rem',
+                color: '#6b7280',
+                marginBottom: '2rem'
+              }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              {config.subtitle}
+            </motion.p>
+            
+            <motion.p
+              style={{
+                margin: 0,
+                fontSize: '1rem',
+                color: '#9ca3af',
+                fontWeight: '500'
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+            >
+              Welcome back, {user?.firstName || user?.username}! 
+              <span style={{ 
+                display: 'inline-block',
+                backgroundColor: config.primaryColor,
+                color: 'white',
+                padding: '0.25rem 0.75rem',
+                borderRadius: '15px',
+                fontSize: '0.875rem',
+                marginLeft: '1rem',
+                fontWeight: '600'
+              }}>
+                {user?.role}
+              </span>
+            </motion.p>
+          </div>
+        </motion.div>
+
+        {/* Quick Actions */}
+        <motion.div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '1.5rem',
+            marginBottom: '2rem'
+          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, staggerChildren: 0.1 }}
+        >
+          {config.quickActions.map((action, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + index * 0.1 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link to={action.link} style={{ textDecoration: 'none' }}>
+                <div style={{
+                  background: 'white',
+                  border: '2px solid #e5e7eb',
+                  borderRadius: '16px',
+                  padding: '1.5rem',
+                  textAlign: 'center',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer',
+                  height: '120px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}>
+                  <action.icon 
+                    style={{
+                      width: '2.5rem',
+                      height: '2.5rem',
+                      color: config.primaryColor,
+                      marginBottom: '0.75rem'
+                    }}
+                  />
+                  <span style={{
+                    fontSize: '1rem',
+                    fontWeight: '600',
+                    color: '#374151'
+                  }}>
+                    {action.label}
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
         </motion.div>
 
         {/* Enhanced Stats Cards */}

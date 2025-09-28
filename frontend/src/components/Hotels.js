@@ -19,6 +19,10 @@ function Hotels() {
   const [newHotel, setNewHotel] = useState({
     name: '',
     address: '',
+    city: '',
+    country: '',
+    description: '',
+    starRating: 5,
     managerId: ''
   });
   const [editHotel, setEditHotel] = useState(null);
@@ -29,6 +33,18 @@ function Hotels() {
   const [alert, setAlert] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [errors, setErrors] = useState({});
+  
+  // Role-based permissions
+  const isAdmin = user?.role === 'ADMIN';
+  const isManager = user?.role === 'MANAGER';
+  const isCustomer = user?.role === 'CUSTOMER';
+  
+  // Determine what user can do
+  const canAddHotels = isAdmin; // Only admin can add hotels
+  const canEditHotels = isAdmin; // Only admin can edit hotels
+  const canDeleteHotels = isAdmin; // Only admin can delete hotels
+  const canManageRooms = isAdmin || isManager; // Admin and Manager can manage rooms
+  const canViewDetails = true; // Everyone can view hotel details
 
   useEffect(() => {
     fetchHotels();
@@ -56,15 +72,28 @@ function Hotels() {
   const validateForm = (hotel) => {
     const newErrors = {};
     
-    if (!hotel.name.trim()) {
+    if (!hotel.name?.trim()) {
       newErrors.name = 'Hotel name is required';
     }
     
-    if (!hotel.address.trim()) {
+    if (!hotel.address?.trim()) {
       newErrors.address = 'Hotel address is required';
     }
     
-    if (!hotel.managerId || parseInt(hotel.managerId) <= 0) {
+    if (!hotel.city?.trim()) {
+      newErrors.city = 'City is required';
+    }
+    
+    if (!hotel.country?.trim()) {
+      newErrors.country = 'Country is required';
+    }
+    
+    if (hotel.starRating < 1 || hotel.starRating > 5) {
+      newErrors.starRating = 'Star rating must be between 1 and 5';
+    }
+    
+    // Only admin needs to assign manager
+    if (isAdmin && (!hotel.managerId || parseInt(hotel.managerId) <= 0)) {
       newErrors.managerId = 'Valid manager ID is required';
     }
     
@@ -106,7 +135,15 @@ function Hotels() {
       };
       const response = await axios.post('/api/hotels', hotelData);
       
-      setNewHotel({ name: '', address: '', managerId: '' });
+      setNewHotel({ 
+        name: '', 
+        address: '', 
+        city: '',
+        country: '',
+        description: '',
+        starRating: 5,
+        managerId: '' 
+      });
       setShowForm(false);
       setErrors({});
       fetchHotels();
@@ -229,8 +266,16 @@ function Hotels() {
       <Card
         title={pageInfo.title}
         actions={
-          (user?.role === 'ADMIN' || user?.role === 'MANAGER') ? (
-            <Button onClick={() => setShowForm(!showForm)}>
+          canAddHotels ? (
+            <Button 
+              onClick={() => setShowForm(!showForm)}
+              style={{
+                background: 'linear-gradient(135deg, var(--primary-color), var(--secondary-color))',
+                color: 'white',
+                border: 'none'
+              }}
+            >
+              <PlusIcon className="w-4 h-4 mr-2" />
               {showForm ? 'Cancel' : 'Add New Hotel'}
             </Button>
           ) : null
@@ -239,52 +284,129 @@ function Hotels() {
         <div className="flex gap-md" style={{ marginBottom: 'var(--spacing-lg)' }}>
           <div style={{ flex: 1 }}>
             <Input
-              placeholder="Search hotels by name or address..."
+              placeholder={`Search hotels by name or address...`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              style={{
+                padding: 'var(--spacing-sm) var(--spacing-md)',
+                border: '2px solid var(--gray-300)',
+                borderRadius: 'var(--radius-lg)',
+                fontSize: '1rem'
+              }}
             />
           </div>
+          <MagnifyingGlassIcon className="w-6 h-6" style={{ color: 'var(--gray-500)' }} />
         </div>
         
-        {showForm && (
-          <div className="form-container">
-            <h3>Add New Hotel</h3>
+        {showForm && canAddHotels && (
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="form-container"
+            style={{
+              background: 'linear-gradient(135deg, var(--gray-50), white)',
+              border: '2px solid var(--primary-color)',
+              borderRadius: 'var(--radius-xl)',
+              padding: 'var(--spacing-xl)',
+              marginBottom: 'var(--spacing-xl)',
+              boxShadow: 'var(--shadow-lg)'
+            }}
+          >
+            <h3 style={{ 
+              color: 'var(--primary-color)', 
+              marginBottom: 'var(--spacing-lg)',
+              fontSize: '1.5rem',
+              fontWeight: '600'
+            }}>✨ Add New Hotel</h3>
             <form onSubmit={handleSubmit}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 'var(--spacing-lg)' }}>
+                <Input
+                  label="Hotel Name"
+                  name="name"
+                  value={newHotel.name}
+                  onChange={handleInputChange}
+                  required
+                  error={errors.name}
+                  placeholder="Enter hotel name"
+                />
+                <Input
+                  label="Address"
+                  name="address"
+                  value={newHotel.address}
+                  onChange={handleInputChange}
+                  required
+                  error={errors.address}
+                  placeholder="Enter full address"
+                />
+                <Input
+                  label="City"
+                  name="city"
+                  value={newHotel.city}
+                  onChange={handleInputChange}
+                  required
+                  error={errors.city}
+                  placeholder="Enter city"
+                />
+                <Input
+                  label="Country"
+                  name="country"
+                  value={newHotel.country}
+                  onChange={handleInputChange}
+                  required
+                  error={errors.country}
+                  placeholder="Enter country"
+                />
+                <Input
+                  label="Star Rating"
+                  name="starRating"
+                  type="number"
+                  min="1"
+                  max="5"
+                  value={newHotel.starRating}
+                  onChange={handleInputChange}
+                  required
+                  error={errors.starRating}
+                />
+                {isAdmin && (
+                  <Input
+                    label="Manager ID"
+                    name="managerId"
+                    type="number"
+                    value={newHotel.managerId}
+                    onChange={handleInputChange}
+                    required
+                    error={errors.managerId}
+                    placeholder="Enter manager ID"
+                  />
+                )}
+              </div>
               <Input
-                label="Hotel Name"
-                name="name"
-                value={newHotel.name}
+                label="Description"
+                name="description"
+                value={newHotel.description}
                 onChange={handleInputChange}
-                required
-                error={errors.name}
+                placeholder="Enter hotel description (optional)"
+                style={{ marginTop: 'var(--spacing-lg)' }}
               />
-              <Input
-                label="Address"
-                name="address"
-                value={newHotel.address}
-                onChange={handleInputChange}
-                required
-                error={errors.address}
-              />
-              <Input
-                label="Manager ID"
-                type="number"
-                name="managerId"
-                value={newHotel.managerId}
-                onChange={handleInputChange}
-                required
-                error={errors.managerId}
-              />
-              <div className="flex gap-sm">
-                <Button type="submit" loading={submitLoading}>
-                  Add Hotel
-                </Button>
-                <Button type="button" variant="outline" onClick={() => setShowForm(false)}>
+              <div style={{ marginTop: 'var(--spacing-xl)', display: 'flex', gap: 'var(--spacing-md)', justifyContent: 'flex-end' }}>
+                <Button 
+                  type="button" 
+                  onClick={() => setShowForm(false)}
+                  className="btn-secondary"
+                >
                   Cancel
+                </Button>
+                <Button 
+                  type="submit" 
+                  disabled={submitLoading}
+                  className="btn-success"
+                  style={{ minWidth: '120px' }}
+                >
+                  {submitLoading ? <LoadingSpinner /> : '✅ Add Hotel'}
                 </Button>
               </div>
             </form>
-          </div>
+          </motion.div>
         )}
         
         <div style={{ marginTop: 'var(--spacing-lg)' }}>
@@ -295,37 +417,130 @@ function Hotels() {
             </div>
           ) : filteredHotels.length === 0 ? (
             <div className="text-center" style={{ padding: 'var(--spacing-xl)', color: 'var(--gray-500)' }}>
-              {searchTerm ? 'No hotels found matching your search.' : 'No hotels found.'}
+              <BuildingOfficeIcon className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--gray-400)' }} />
+              <h3>No Hotels Found</h3>
+              <p>{searchTerm ? 'No hotels found matching your search.' : 'No hotels available yet.'}</p>
+              {canAddHotels && !searchTerm && (
+                <Button 
+                  onClick={() => setShowForm(true)}
+                  style={{ marginTop: 'var(--spacing-lg)' }}
+                  className="btn-success"
+                >
+                  <PlusIcon className="w-4 h-4 mr-2" />
+                  Add First Hotel
+                </Button>
+              )}
             </div>
           ) : (
-            <div className="grid gap-md">
-              {filteredHotels.map(hotel => (
-                <div key={hotel.id} className="list-item">
-                  <div className="list-item-header">
-                    <div className="list-item-content">
-                      <div className="list-item-title">{hotel.name}</div>
-                      <div className="list-item-subtitle">{hotel.address}</div>
-                      <div className="list-item-subtitle">ID: {hotel.id} | Manager ID: {hotel.managerId}</div>
+            <div style={{ display: 'grid', gap: 'var(--spacing-lg)' }}>
+              <AnimatePresence>
+                {filteredHotels.map(hotel => (
+                  <motion.div 
+                    key={hotel.id} 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="list-item"
+                    style={{
+                      background: 'white',
+                      border: '2px solid var(--gray-200)',
+                      borderRadius: 'var(--radius-xl)',
+                      padding: 'var(--spacing-xl)',
+                      boxShadow: 'var(--shadow-md)',
+                      transition: 'all 0.2s ease',
+                      cursor: isCustomer ? 'pointer' : 'default'
+                    }}
+                    whileHover={isCustomer ? { scale: 1.02, boxShadow: 'var(--shadow-lg)' } : {}}
+                  >
+                    <div className="list-item-header">
+                      <div className="list-item-content">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-sm)', marginBottom: 'var(--spacing-sm)' }}>
+                          <h3 className="list-item-title" style={{ fontSize: '1.5rem', color: 'var(--primary-color)' }}>
+                            {hotel.name}
+                          </h3>
+                          <div style={{ display: 'flex', alignItems: 'center' }}>
+                            {[...Array(Math.floor(hotel.starRating || 5))].map((_, i) => (
+                              <span key={i} style={{ color: '#fbbf24', fontSize: '1.2rem' }}>⭐</span>
+                            ))}
+                          </div>
+                        </div>
+                        
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 'var(--spacing-md)', marginBottom: 'var(--spacing-md)' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                            <MapPinIcon className="w-4 h-4" style={{ color: 'var(--gray-500)' }} />
+                            <span className="list-item-subtitle">{hotel.address}</span>
+                          </div>
+                          {hotel.city && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                              <span className="list-item-subtitle">📍 {hotel.city}, {hotel.country}</span>
+                            </div>
+                          )}
+                          {(isAdmin || isManager) && (
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--spacing-xs)' }}>
+                              <UserIcon className="w-4 h-4" style={{ color: 'var(--gray-500)' }} />
+                              <span className="list-item-subtitle">Manager ID: {hotel.managerId}</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {hotel.description && (
+                          <p style={{ color: 'var(--gray-600)', marginBottom: 'var(--spacing-md)', lineHeight: '1.5' }}>
+                            {hotel.description}
+                          </p>
+                        )}
+                        
+                        <div style={{ fontSize: '0.875rem', color: 'var(--gray-500)' }}>
+                          Hotel ID: #{hotel.id}
+                        </div>
+                      </div>
+                      
+                      <div className="list-item-actions" style={{ display: 'flex', gap: 'var(--spacing-sm)', alignItems: 'center' }}>
+                        {isCustomer && (
+                          <Button 
+                            className="btn-success"
+                            style={{ minWidth: '100px' }}
+                          >
+                            🏠 View Rooms
+                          </Button>
+                        )}
+                        
+                        {canManageRooms && (
+                          <Button 
+                            variant="outline"
+                            style={{ minWidth: '100px' }}
+                          >
+                            🏠 Manage Rooms
+                          </Button>
+                        )}
+                        
+                        {canEditHotels && (
+                          <Button 
+                            variant="outline" 
+                            size="small"
+                            onClick={() => handleEdit(hotel)}
+                            style={{ minWidth: '80px' }}
+                          >
+                            <PencilIcon className="w-4 h-4 mr-1" />
+                            Edit
+                          </Button>
+                        )}
+                        
+                        {canDeleteHotels && (
+                          <Button 
+                            variant="danger" 
+                            size="small"
+                            onClick={() => handleDelete(hotel.id)}
+                            style={{ minWidth: '80px' }}
+                          >
+                            <TrashIcon className="w-4 h-4 mr-1" />
+                            Delete
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                    <div className="list-item-actions">
-                      <Button 
-                        variant="outline" 
-                        size="small"
-                        onClick={() => handleEdit(hotel)}
-                      >
-                        Edit
-                      </Button>
-                      <Button 
-                        variant="danger" 
-                        size="small"
-                        onClick={() => handleDelete(hotel.id)}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
           )}
         </div>
@@ -334,13 +549,13 @@ function Hotels() {
       <Modal
         isOpen={showEditModal}
         onClose={() => setShowEditModal(false)}
-        title="Edit Hotel"
+        title="✏️ Edit Hotel"
         footer={
           <>
             <Button variant="outline" onClick={() => setShowEditModal(false)}>
               Cancel
             </Button>
-            <Button onClick={handleUpdateSubmit} loading={submitLoading}>
+            <Button onClick={handleUpdateSubmit} loading={submitLoading} className="btn-success">
               Update Hotel
             </Button>
           </>
@@ -348,30 +563,66 @@ function Hotels() {
       >
         {editHotel && (
           <form onSubmit={handleUpdateSubmit}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--spacing-md)' }}>
+              <Input
+                label="Hotel Name"
+                name="name"
+                value={editHotel.name}
+                onChange={handleEditInputChange}
+                required
+                error={errors.name}
+              />
+              <Input
+                label="Address"
+                name="address"
+                value={editHotel.address}
+                onChange={handleEditInputChange}
+                required
+                error={errors.address}
+              />
+              <Input
+                label="City"
+                name="city"
+                value={editHotel.city || ''}
+                onChange={handleEditInputChange}
+                error={errors.city}
+              />
+              <Input
+                label="Country"
+                name="country"
+                value={editHotel.country || ''}
+                onChange={handleEditInputChange}
+                error={errors.country}
+              />
+              <Input
+                label="Star Rating"
+                name="starRating"
+                type="number"
+                min="1"
+                max="5"
+                value={editHotel.starRating || 5}
+                onChange={handleEditInputChange}
+                error={errors.starRating}
+              />
+              {isAdmin && (
+                <Input
+                  label="Manager ID"
+                  type="number"
+                  name="managerId"
+                  value={editHotel.managerId}
+                  onChange={handleEditInputChange}
+                  required
+                  error={errors.managerId}
+                />
+              )}
+            </div>
             <Input
-              label="Hotel Name"
-              name="name"
-              value={editHotel.name}
+              label="Description"
+              name="description"
+              value={editHotel.description || ''}
               onChange={handleEditInputChange}
-              required
-              error={errors.name}
-            />
-            <Input
-              label="Address"
-              name="address"
-              value={editHotel.address}
-              onChange={handleEditInputChange}
-              required
-              error={errors.address}
-            />
-            <Input
-              label="Manager ID"
-              type="number"
-              name="managerId"
-              value={editHotel.managerId}
-              onChange={handleEditInputChange}
-              required
-              error={errors.managerId}
+              error={errors.description}
+              style={{ marginTop: 'var(--spacing-md)' }}
             />
           </form>
         )}
