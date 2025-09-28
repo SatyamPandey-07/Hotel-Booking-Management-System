@@ -85,8 +85,10 @@ function Rooms() {
   const fetchRooms = async () => {
     try {
       setLoading(true);
-      const apiUrl = hotelIdFromUrl ? `/api/rooms?hotelId=${hotelIdFromUrl}` : '/api/rooms';
+      const apiUrl = hotelIdFromUrl ? `http://localhost:8080/api/rooms?hotelId=${hotelIdFromUrl}` : 'http://localhost:8080/api/rooms';
+      console.log('Fetching rooms from:', apiUrl);
       const response = await axios.get(apiUrl);
+      console.log('Rooms response:', response.data);
       
       if (response.data.rooms) {
         setRooms(response.data.rooms);
@@ -95,91 +97,8 @@ function Rooms() {
       }
     } catch (error) {
       console.error('Error fetching rooms:', error);
-      
-      // Provide mock data when backend is not available
-      const mockRooms = [
-        {
-          id: 1,
-          hotelId: 1,
-          hotelName: 'Grand Palace Hotel',
-          roomNumber: '101',
-          roomType: 'DELUXE',
-          capacity: 2,
-          pricePerNight: 299.99,
-          amenities: 'WiFi, TV, Mini Bar, City View, Room Service',
-          isAvailable: true,
-          bedType: 'King',
-          size: '35 sqm',
-          view: 'City View'
-        },
-        {
-          id: 2,
-          hotelId: 1,
-          hotelName: 'Grand Palace Hotel',
-          roomNumber: '102',
-          roomType: 'SUITE',
-          capacity: 4,
-          pricePerNight: 499.99,
-          amenities: 'WiFi, TV, Mini Bar, City View, Jacuzzi, Living Room, Kitchenette',
-          isAvailable: true,
-          bedType: 'King + Sofa Bed',
-          size: '65 sqm',
-          view: 'City & River View'
-        },
-        {
-          id: 3,
-          hotelId: 2,
-          hotelName: 'Seaside Resort & Spa',
-          roomNumber: '201',
-          roomType: 'DOUBLE',
-          capacity: 2,
-          pricePerNight: 199.99,
-          amenities: 'WiFi, TV, Ocean View, Balcony, Beach Access',
-          isAvailable: true,
-          bedType: 'Queen',
-          size: '28 sqm',
-          view: 'Ocean View'
-        },
-        {
-          id: 4,
-          hotelId: 2,
-          hotelName: 'Seaside Resort & Spa',
-          roomNumber: '301',
-          roomType: 'FAMILY',
-          capacity: 6,
-          pricePerNight: 349.99,
-          amenities: 'WiFi, TV, Ocean View, Kitchen, Multiple Bedrooms, Beach Access',
-          isAvailable: true,
-          bedType: '2 Queens + Bunk Beds',
-          size: '55 sqm',
-          view: 'Ocean View'
-        },
-        {
-          id: 5,
-          hotelId: 3,
-          hotelName: 'Mountain View Lodge',
-          roomNumber: '150',
-          roomType: 'SINGLE',
-          capacity: 1,
-          pricePerNight: 149.99,
-          amenities: 'WiFi, TV, Fireplace, Mountain View',
-          isAvailable: true,
-          bedType: 'Queen',
-          size: '22 sqm',
-          view: 'Mountain View'
-        }
-      ];
-      
-      // Filter by hotel if specified
-      const filteredRooms = hotelIdFromUrl 
-        ? mockRooms.filter(room => room.hotelId === parseInt(hotelIdFromUrl))
-        : mockRooms;
-      
-      setRooms(filteredRooms);
-      
-      if (!error.response || error.response.status >= 500) {
-        showAlert('Using demo data - Connect to backend for live room data', 'warning');
-      }
+      showAlert('Error connecting to server. Please ensure backend is running on port 8080.', 'error');
+      setRooms([]);
     } finally {
       setLoading(false);
     }
@@ -187,7 +106,8 @@ function Rooms() {
 
   const fetchHotels = async () => {
     try {
-      const response = await axios.get('/api/hotels');
+      const response = await axios.get('http://localhost:8080/api/hotels');
+      console.log('Hotels for rooms:', response.data);
       
       if (response.data.hotels) {
         setHotels(response.data.hotels);
@@ -253,7 +173,8 @@ function Rooms() {
         specialRequests: bookingData.specialRequests
       };
       
-      const response = await axios.post('/api/bookings', bookingPayload);
+      const response = await axios.post('http://localhost:8080/api/bookings', bookingPayload);
+      console.log('Booking response:', response.data);
       showAlert('Room booked successfully! Confirmation details sent to your email.', 'success');
       setShowBookingModal(false);
       setBookingData({ checkIn: '', checkOut: '', guests: 1, specialRequests: '' });

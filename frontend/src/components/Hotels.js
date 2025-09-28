@@ -45,43 +45,14 @@ function Hotels() {
   const fetchHotels = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/hotels');
+      const response = await axios.get('http://localhost:8080/api/hotels');
+      console.log('Hotels from backend:', response.data);
       setHotels(response.data.hotels || response.data);
     } catch (error) {
       console.error('Error fetching hotels:', error);
-      // Mock data for demo
-      setHotels([
-        {
-          id: 1,
-          name: 'Grand Palace Hotel',
-          address: '123 Madison Ave, New York, NY 10016',
-          city: 'New York',
-          country: 'USA',
-          description: 'Luxury hotel in the heart of Manhattan with world-class amenities and breathtaking city views.',
-          starRating: 5,
-          isActive: true
-        },
-        {
-          id: 2,
-          name: 'Seaside Resort & Spa',
-          address: '456 Ocean Drive, Miami Beach, FL 33139',
-          city: 'Miami Beach',
-          country: 'USA',
-          description: 'Beachfront resort offering pristine beaches, spa services, and gourmet dining experiences.',
-          starRating: 4,
-          isActive: true
-        },
-        {
-          id: 3,
-          name: 'Mountain View Lodge',
-          address: '789 Peak Road, Aspen, CO 81611',
-          city: 'Aspen',
-          country: 'USA',
-          description: 'Cozy mountain retreat with stunning alpine views and world-class skiing nearby.',
-          starRating: 3,
-          isActive: true
-        }
-      ]);
+      showAlert('Error connecting to server. Please ensure backend is running on port 8080.', 'error');
+      // Show empty state instead of mock data
+      setHotels([]);
     } finally {
       setLoading(false);
     }
@@ -103,17 +74,16 @@ function Hotels() {
     
     try {
       setSubmitLoading(true);
-      const response = await axios.post('/api/hotels', newHotel);
+      const response = await axios.post('http://localhost:8080/api/hotels', newHotel);
+      console.log('Hotel added:', response.data);
       setNewHotel({ name: '', address: '', city: '', country: '', description: '', starRating: 5 });
       setShowForm(false);
       setErrors({});
-      fetchHotels();
+      fetchHotels(); // Refresh the list
       showAlert('Hotel added successfully!', 'success');
     } catch (error) {
       console.error('Error adding hotel:', error);
-      showAlert('Hotel added successfully! (Demo mode)', 'success');
-      setShowForm(false);
-      fetchHotels();
+      showAlert('Error adding hotel. Please check if backend server is running.', 'error');
     } finally {
       setSubmitLoading(false);
     }
@@ -131,16 +101,15 @@ function Hotels() {
     
     try {
       setSubmitLoading(true);
-      await axios.put(`/api/hotels/${editHotel.id}`, editHotel);
+      const response = await axios.put(`http://localhost:8080/api/hotels/${editHotel.id}`, editHotel);
+      console.log('Hotel updated:', response.data);
       setShowEditModal(false);
       setErrors({});
-      fetchHotels();
+      fetchHotels(); // Refresh the list
       showAlert('Hotel updated successfully!', 'success');
     } catch (error) {
       console.error('Error updating hotel:', error);
-      showAlert('Hotel updated successfully! (Demo mode)', 'success');
-      setShowEditModal(false);
-      fetchHotels();
+      showAlert('Error updating hotel. Please check if backend server is running.', 'error');
     } finally {
       setSubmitLoading(false);
     }
@@ -553,14 +522,33 @@ function Hotels() {
                     </div>
                     
                     {hotel.description && (
-                      <p style={{ 
-                        color: '#6b7280', 
-                        fontSize: '0.9rem',
-                        lineHeight: '1.5',
-                        margin: '0 0 1.5rem 0'
+                      <div style={{
+                        backgroundColor: '#f8fafc',
+                        border: '1px solid #e2e8f0',
+                        borderRadius: '8px',
+                        padding: '1rem',
+                        margin: '1rem 0 1.5rem 0'
                       }}>
-                        {hotel.description}
-                      </p>
+                        <h4 style={{
+                          color: '#1e293b',
+                          fontSize: '0.875rem',
+                          fontWeight: '600',
+                          margin: '0 0 0.5rem 0',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.05em'
+                        }}>
+                          Description
+                        </h4>
+                        <p style={{ 
+                          color: '#475569', 
+                          fontSize: '0.95rem',
+                          lineHeight: '1.6',
+                          margin: '0',
+                          fontWeight: '400'
+                        }}>
+                          {hotel.description}
+                        </p>
+                      </div>
                     )}
 
                     {/* Action Buttons */}
