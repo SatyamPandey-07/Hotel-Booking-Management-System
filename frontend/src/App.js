@@ -2,6 +2,10 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LoadingSpinner } from './components/ui';
+import axios from 'axios';
+
+// Configure axios base URL globally
+axios.defaults.baseURL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
 // Lazy load components
 const ThemeWrapper = lazy(() => import('./components/ThemeWrapper'));
