@@ -14,9 +14,9 @@
 
 **A revolutionary, full-stack hotel booking management system with enterprise-grade security and stunning 3D visuals**
 
-🚀 **[Live Frontend](https://monumental-cupcake-869ea4.netlify.app/)** • 🔧 **[Live Backend API](https://hotel-booking-management-system-production.up.railway.app)** • 📚 **[API Docs](https://hotel-booking-management-system-production.up.railway.app/swagger-ui.html)**
+🚀 **[Live Frontend](https://hotel-booking-management-system-two.vercel.app/)** • 🔧 **[Live Backend API](https://hotel-booking-management-system-production.up.railway.app)** • 📚 **[API Docs](https://hotel-booking-management-system-production.up.railway.app/swagger-ui.html)**
 
-[![Deploy Status](https://img.shields.io/badge/Frontend-Live%20on%20Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://monumental-cupcake-869ea4.netlify.app/)
+[![Deploy Status](https://img.shields.io/badge/Frontend-Live%20on%20Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://hotel-booking-management-system-two.vercel.app/)
 [![Backend Status](https://img.shields.io/badge/Backend-Live%20on%20Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)](https://hotel-booking-management-system-production.up.railway.app)
 
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=hotel-booking-system)
@@ -131,8 +131,8 @@
 <tr>
 <td width="50%">
 
-#### 🎨 **Frontend (Netlify)**
-**URL**: [https://monumental-cupcake-869ea4.netlify.app/](https://monumental-cupcake-869ea4.netlify.app/)
+#### 🎨 **Frontend (Vercel)**
+**URL**: [https://hotel-booking-management-system-two.vercel.app/](https://hotel-booking-management-system-two.vercel.app/)
 
 - Beautiful React 18 UI with 3D animations
 - JWT-based authentication
