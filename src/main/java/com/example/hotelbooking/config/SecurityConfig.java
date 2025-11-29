@@ -74,8 +74,11 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // TODO: Update this in production to specific domain (e.g., "https://yourdomain.com")
-        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
+        // Production frontend URLs
+        configuration.setAllowedOrigins(Arrays.asList(
+            "https://monumental-cupcake-869ea4.netlify.app",
+            "http://localhost:3000" // For local development
+        ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
