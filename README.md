@@ -87,7 +87,6 @@
 | Feature | Category | Status | Description |
 |---------|----------|--------|-------------|
 | 🏨 **Hotel Booking from Cards** | User Experience | ✅ **Live** | Direct booking from hotel cards with date validation |
-| 🛏️ **Room 456 Booking** | Custom Implementation | ✅ **Live** | Successfully book room 456 in Beach Resort |
 | 🔍 **Advanced Room Search** | Search & Filter | ✅ **Live** | Search by room number, type, amenities, hotel |
 | 📊 **3D Dashboard Analytics** | Visualization | ✅ **Live** | Three.js powered dashboard with floating animations |
 | 🎨 **Sexy Hotel Cards** | UI/UX Design | ✅ **Live** | Gradient headers, glassmorphism, smooth animations |
