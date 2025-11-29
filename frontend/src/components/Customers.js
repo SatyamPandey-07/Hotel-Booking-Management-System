@@ -18,10 +18,6 @@ function Customers() {
   const [searchTerm, setSearchTerm] = useState('');
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
-
   const fetchCustomers = async () => {
     try {
       setLoading(true);
@@ -41,6 +37,11 @@ function Customers() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCustomers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const validateForm = (customer) => {
     const newErrors = {};

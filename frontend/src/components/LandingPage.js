@@ -233,26 +233,49 @@ function LandingPage() {
             🏨 Hotel Booking System
           </motion.div>
           
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Link to="/login" style={{ textDecoration: 'none' }}>
-              <Button
-                style={{
-                  background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
-                  border: 'none',
-                  color: 'white',
-                  padding: '0.75rem 2rem',
-                  borderRadius: '50px',
-                  fontWeight: '600',
-                  boxShadow: '0 10px 30px rgba(79, 70, 229, 0.3)'
-                }}
-              >
-                Sign In
-              </Button>
-            </Link>
-          </motion.div>
+          <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link to="/signup" style={{ textDecoration: 'none' }}>
+                <Button
+                  style={{
+                    background: 'linear-gradient(135deg, #10b981 0%, #06b6d4 100%)',
+                    border: 'none',
+                    color: 'white',
+                    padding: '0.75rem 2rem',
+                    borderRadius: '50px',
+                    fontWeight: '600',
+                    boxShadow: '0 10px 30px rgba(16, 185, 129, 0.3)'
+                  }}
+                >
+                  Sign Up
+                </Button>
+              </Link>
+            </motion.div>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link to="/login" style={{ textDecoration: 'none' }}>
+                <Button
+                  style={{
+                    background: 'linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%)',
+                    border: 'none',
+                    color: 'white',
+                    padding: '0.75rem 2rem',
+                    borderRadius: '50px',
+                    fontWeight: '600',
+                    boxShadow: '0 10px 30px rgba(79, 70, 229, 0.3)'
+                  }}
+                >
+                  Sign In
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
         </div>
       </motion.header>
       

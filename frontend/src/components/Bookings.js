@@ -24,14 +24,6 @@ function Bookings() {
   const [searchTerm, setSearchTerm] = useState('');
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    Promise.all([
-      fetchBookings(),
-      fetchCustomers(),
-      fetchHotels()
-    ]);
-  }, []);
-
   const fetchBookings = async () => {
     try {
       setLoading(true);
@@ -77,6 +69,15 @@ function Bookings() {
       console.error('Error fetching hotels:', error);
     }
   };
+
+  useEffect(() => {
+    Promise.all([
+      fetchBookings(),
+      fetchCustomers(),
+      fetchHotels()
+    ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const validateForm = (booking) => {
     const newErrors = {};

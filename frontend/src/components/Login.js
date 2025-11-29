@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button, Input, Alert } from './ui';
 import { UserIcon, LockClosedIcon } from '@heroicons/react/24/outline';
@@ -353,6 +354,45 @@ function Login() {
               {loading ? 'Signing In...' : '🚀 Sign In'}
             </Button>
           </motion.form>
+
+          {/* Signup Link */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            style={{ 
+              textAlign: 'center', 
+              marginBottom: '1.5rem' 
+            }}
+          >
+            <p style={{ 
+              color: 'rgba(255, 255, 255, 0.8)', 
+              fontSize: '0.95rem',
+              margin: 0 
+            }}>
+              Don't have an account?{' '}
+              <Link 
+                to="/signup" 
+                style={{ 
+                  color: '#06b6d4',
+                  fontWeight: '600',
+                  textDecoration: 'none',
+                  borderBottom: '1px solid transparent',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.borderBottom = '1px solid #06b6d4';
+                  e.target.style.color = '#4f46e5';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.borderBottom = '1px solid transparent';
+                  e.target.style.color = '#06b6d4';
+                }}
+              >
+                Create one now
+              </Link>
+            </p>
+          </motion.div>
 
           {/* Demo Accounts */}
           <motion.div

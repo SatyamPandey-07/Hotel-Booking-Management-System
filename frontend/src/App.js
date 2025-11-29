@@ -5,11 +5,11 @@ import ThemeWrapper from './components/ThemeWrapper';
 import Customers from './components/Customers';
 import Hotels from './components/Hotels';
 import Bookings from './components/Bookings';
-import CustomerBookings from './components/CustomerBookings';
 import Rooms from './components/Rooms';
 import Dashboard from './components/Dashboard';
 import Home from './components/Home';
 import Login from './components/Login';
+import Signup from './components/Signup';
 import LandingPage from './components/LandingPage';
 import Profile from './components/Profile';
 import MyBookings from './components/MyBookings';
@@ -37,7 +37,6 @@ function Navigation() {
     if (role === 'ADMIN') {
       return [
         ...commonItems,
-        { path: '/users', label: '👤 Users', icon: '👤' },
         { path: '/customers', label: '👥 Customers', icon: '👥' },
         { path: '/hotels', label: '🏨 Manage Hotels', icon: '🏨' },
         { path: '/rooms', label: '🏠 Manage Rooms', icon: '🏠' },
@@ -179,6 +178,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
@@ -201,16 +201,6 @@ function AppContent() {
             } />
             
             {/* Admin-only routes */}
-            <Route path="/users" element={
-              <ProtectedRoute allowedRoles={['ADMIN']}>
-                <div style={{ padding: 'var(--spacing-xl)', textAlign: 'center' }}>
-                  <h2>👤 User Management</h2>
-                  <p>Admin-only feature: Manage all system users</p>
-                  <p style={{ color: 'var(--gray-600)' }}>This feature is coming soon...</p>
-                </div>
-              </ProtectedRoute>
-            } />
-            
             <Route path="/customers" element={
               <ProtectedRoute allowedRoles={['ADMIN']}>
                 <Customers />

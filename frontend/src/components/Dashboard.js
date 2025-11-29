@@ -249,10 +249,10 @@ function Dashboard() {
         subtitle: 'System Overview & Management',
         primaryColor: '#dc2626', // Red
         quickActions: [
-          { label: 'Add New Hotel', icon: PlusIcon, link: '/hotels', color: 'success', action: () => navigate('/hotels') },
-          { label: 'Manage Users', icon: UserGroupIcon, link: '/users', color: 'info', action: () => navigate('/customers') },
-          { label: 'View All Bookings', icon: CalendarDaysIcon, link: '/bookings', color: 'primary', action: () => navigate('/bookings') },
-          { label: 'Manage Rooms', icon: BuildingOfficeIcon, link: '/rooms', color: 'secondary', action: () => navigate('/rooms') }
+          { label: 'Manage Customers', icon: UserGroupIcon, link: '/customers', color: 'info', action: () => navigate('/customers') },
+          { label: 'Manage Hotels', icon: BuildingOfficeIcon, link: '/hotels', color: 'success', action: () => navigate('/hotels') },
+          { label: 'Manage Rooms', icon: PlusIcon, link: '/rooms', color: 'secondary', action: () => navigate('/rooms') },
+          { label: 'View All Bookings', icon: CalendarDaysIcon, link: '/bookings', color: 'primary', action: () => navigate('/bookings') }
         ]
       };
     } else {
@@ -843,7 +843,7 @@ function Dashboard() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                {isAdmin ? '👥 Manage Users' : '👤 My Profile'}
+                {isAdmin ? '👥 Manage Customers' : '👤 My Profile'}
               </motion.button>
             </div>
           </Card>

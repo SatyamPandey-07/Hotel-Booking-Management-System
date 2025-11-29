@@ -61,18 +61,25 @@ function MyBookings() {
     
     try {
       setCancelLoading(true);
-      await axios.put(`/api/bookings/${bookingId}/cancel`);
+      // Find the booking to get its current data
+      const bookingToCancel = bookings.find(b => b.id === bookingId);
+      if (!bookingToCancel) {
+        throw new Error('Booking not found');
+      }
+      
+      // Update booking status to CANCELLED using the existing PUT endpoint
+      const updatedBooking = {
+        ...bookingToCancel,
+        status: 'CANCELLED'
+      };
+      
+      await axios.put(`http://localhost:8080/api/bookings/${bookingId}`, updatedBooking);
       showAlert('Booking cancelled successfully', 'success');
       fetchMyBookings();
     } catch (error) {
       console.error('Error cancelling booking:', error);
-      // Mock cancellation for demo
-      setBookings(prev => prev.map(booking => 
-        booking.id === bookingId 
-          ? { ...booking, status: 'CANCELLED' }
-          : booking
-      ));
-      showAlert('Booking cancelled successfully (Demo mode)', 'success');
+      const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Error cancelling booking';
+      showAlert(errorMessage, 'error');
     } finally {
       setCancelLoading(false);
     }

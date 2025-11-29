@@ -124,12 +124,14 @@ public class BookingDAO {
     // Dashboard/Analytics methods
     public int getTotalBookingsCount() {
         String sql = "SELECT COUNT(*) FROM bookings";
-        return jdbcTemplate.queryForObject(sql, Integer.class);
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class);
+        return count != null ? count : 0;
     }
 
     public int getBookingsCountByStatus(String status) {
         String sql = "SELECT COUNT(*) FROM bookings WHERE status = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, status);
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, status);
+        return count != null ? count : 0;
     }
 
     public Double getTotalRevenue() {

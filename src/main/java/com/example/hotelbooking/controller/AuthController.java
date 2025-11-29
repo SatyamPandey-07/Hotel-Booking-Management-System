@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.hotelbooking.dto.LoginRequest;
 import com.example.hotelbooking.dto.LoginResponse;
+import com.example.hotelbooking.dto.RegisterRequest;
+import com.example.hotelbooking.dto.RegisterResponse;
 import com.example.hotelbooking.service.AuthService;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -92,5 +96,22 @@ public class AuthController {
         // For JWT, logout is typically handled on the client side by removing the token
         response.put("message", "Logout successful");
         return ResponseEntity.ok(response);
+    }
+    
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+        try {
+            RegisterResponse response = authService.register(registerRequest);
+            
+            if (response.isSuccess()) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            } else {
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new RegisterResponse(false, "Registration failed: " + e.getMessage(), null, null, null));
+        }
     }
 }
