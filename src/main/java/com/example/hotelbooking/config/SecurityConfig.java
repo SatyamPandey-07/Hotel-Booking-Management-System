@@ -76,8 +76,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         // Production frontend URLs
         configuration.setAllowedOrigins(Arrays.asList(
-            "https://ubiquitous-peony-797a86.netlify.app",
-            "https://monumental-cupcake-869ea4.netlify.app",
+            "https://hotel-booking-management-system-two.vercel.app",
             "http://localhost:3000" // For local development
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
