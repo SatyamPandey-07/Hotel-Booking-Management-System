@@ -88,4 +88,9 @@ public class JwtUtil {
         Claims claims = getAllClaimsFromToken(token);
         return (String) claims.get("role");
     }
+
+    // Extract all claims from token (for testing)
+    public Claims extractAllClaims(String token) {
+        return getAllClaimsFromToken(token);
+    }
 }

@@ -44,6 +44,8 @@ public class SecurityConfig {
             .authorizeRequests()
                 .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+                .antMatchers("/actuator/**").permitAll()
                 .antMatchers("/api/hotels", "/api/rooms", "/api/rooms/hotel/**").permitAll()
                 .antMatchers("/api/dashboard/**", "/api/bookings/**", "/api/customers/**").authenticated()
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
