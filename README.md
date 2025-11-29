@@ -14,7 +14,10 @@
 
 **A revolutionary, full-stack hotel booking management system with enterprise-grade security and stunning 3D visuals**
 
-🚀 **Live Demo** • 📚 **Documentation** • 🛠️ **Setup Guide** • 🔧 **API Reference**
+🚀 **[Live Frontend](https://monumental-cupcake-869ea4.netlify.app/)** • 🔧 **[Live Backend API](https://hotel-booking-management-system-production.up.railway.app)** • 📚 **[API Docs](https://hotel-booking-management-system-production.up.railway.app/swagger-ui.html)**
+
+[![Deploy Status](https://img.shields.io/badge/Frontend-Live%20on%20Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white)](https://monumental-cupcake-869ea4.netlify.app/)
+[![Backend Status](https://img.shields.io/badge/Backend-Live%20on%20Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)](https://hotel-booking-management-system-production.up.railway.app)
 
 ![Visitors](https://visitor-badge.laobi.icu/badge?page_id=hotel-booking-system)
 ![GitHub last commit](https://img.shields.io/github/last-commit/yourusername/hotel-booking-system)
@@ -120,7 +123,45 @@
 
 ## 🎯 Quick Start
 
-### 🚀 **30-Second Setup**
+### 🌐 **Live Production Deployment**
+
+**🚀 Try it now - No installation required!**
+
+<table>
+<tr>
+<td width="50%">
+
+#### 🎨 **Frontend (Netlify)**
+**URL**: [https://monumental-cupcake-869ea4.netlify.app/](https://monumental-cupcake-869ea4.netlify.app/)
+
+- Beautiful React 18 UI with 3D animations
+- JWT-based authentication
+- Responsive design for all devices
+- Interactive dashboard with Three.js
+
+</td>
+<td width="50%">
+
+#### ⚙️ **Backend (Railway)**
+**API**: [https://hotel-booking-management-system-production.up.railway.app](https://hotel-booking-management-system-production.up.railway.app)
+
+- Spring Boot REST API
+- H2 in-memory database
+- Swagger documentation: [/swagger-ui.html](https://hotel-booking-management-system-production.up.railway.app/swagger-ui.html)
+- Health check: [/actuator/health](https://hotel-booking-management-system-production.up.railway.app/actuator/health)
+
+</td>
+</tr>
+</table>
+
+**🎮 Demo Credentials:**
+- **Admin**: `admin` / `password`
+- **Manager**: `manager1` / `password`
+- **Customer**: `customer1` / `password123`
+
+---
+
+### 💻 **Local Development Setup**
 
 ```bash
 # 1️⃣ Clone and start backend
@@ -137,14 +178,6 @@ npm install && npm start
 # 🔧 Backend:  http://localhost:8080
 # 💾 Database: http://localhost:8080/h2-console
 ```
-
-### ☁️ **Deployed on Railway**
-
-**Live Application**: Visit the [deployed application](https://railway.app)
-- **Backend API**: Production-ready Spring Boot backend with H2 database
-- **JWT Authentication**: Secure token-based authentication
-- **Auto-scaling**: Automatic resource scaling based on demand
-- **Zero Configuration**: Deployed directly from GitHub repository
 
 ### 🔑 **Demo Accounts**
 
