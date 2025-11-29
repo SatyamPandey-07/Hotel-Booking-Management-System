@@ -4,13 +4,15 @@
 
 [![Java](https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](#)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.18-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](#)
+[![Spring Security](https://img.shields.io/badge/Spring%20Security-5.7.5-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](#)
 [![React](https://img.shields.io/badge/React-18.2.0-61DAFB?style=for-the-badge&logo=react&logoColor=black)](#)
 [![Three.js](https://img.shields.io/badge/Three.js-0.150+-000000?style=for-the-badge&logo=three.js&logoColor=white)](#)
-[![Framer Motion](https://img.shields.io/badge/Framer%20Motion-10.0+-0055FF?style=for-the-badge&logo=framer&logoColor=white)](#)
+[![Framer Motion](https://img.shields.io/badge/Framer%20Motion-10.16-0055FF?style=for-the-badge&logo=framer&logoColor=white)](#)
+[![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)](#)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](#)
 [![H2](https://img.shields.io/badge/H2-Database-0078D4?style=for-the-badge&logo=h2&logoColor=white)](#)
 
-**A revolutionary, full-stack hotel booking management system with cutting-edge technology and stunning 3D visuals**
+**A revolutionary, full-stack hotel booking management system with enterprise-grade security and stunning 3D visuals**
 
 🚀 **Live Demo** • 📚 **Documentation** • 🛠️ **Setup Guide** • 🔧 **API Reference**
 
@@ -30,32 +32,33 @@
 <td width="50%">
 
 ### 🎯 **Core Features**
-- 🔐 **JWT Authentication** with role-based access
+- 🔐 **JWT Authentication** with BCrypt password hashing
+- 📝 **User Registration** with real-time validation
 - 🏨 **Multi-Hotel Management** with room inventory
 - 📅 **Smart Booking System** with date validation
 - 📊 **Real-time Analytics Dashboard** with 3D visualizations
-- 👥 **User Management** (Admin/Manager/Customer)
+- 👥 **User Management** (Admin/Customer roles)
 - 💰 **Revenue Tracking** and reporting
-- 🛏️ **Room Availability** management with native dropdowns
+- 🛏️ **Room Availability** management
 - 📱 **Responsive Design** for all devices
-- 🎆 **Stunning Landing Page** with revolutionary features showcase
+- 🎆 **Stunning Landing Page** with 3D animations
 
 </td>
 <td width="50%">
 
-### 🚀 **Revolutionary Features**
-- ⚡ **Real-time Updates** and notifications
+### 🚀 **Security & Advanced Features**
+- 🛡️ **Enterprise Security** with Spring Security + JWT
+- 🔒 **Password Encryption** using BCrypt algorithm
+- ✅ **Self-Service Registration** with strength validation
+- 🔑 **Role-Based Access Control** (RBAC)
 - 🎨 **Modern UI/UX** with Three.js 3D backgrounds
-- 🔄 **Auto-refresh** dashboard metrics
-- 📈 **Visual Analytics** with animated charts
-- 🛡️ **Security Hardened** with Spring Security
-- 🌐 **RESTful API** with comprehensive endpoints
+- 🌈 **Glassmorphism Design** with beautiful gradients
+- 💫 **Animated Components** using Framer Motion
+- ⚡ **Real-time Updates** without page refresh
+- 🌐 **RESTful API** with 30+ endpoints
 - 💾 **Dual Database** support (H2/MySQL)
-- 🎭 **Role-based** interface customization
-- 🌌 **3D Geometric Animations** with floating shapes
-- 🌈 **Gradient Themes** with glassmorphism design
-- 💫 **Interactive Hover Effects** and smooth transitions
-- 🔮 **Future Roadmap** with AI, Blockchain, AR/VR features
+- 🎭 **Context-based State** management
+- 🔮 **Exception Handling** with global error handler
 
 </td>
 </tr>
@@ -185,14 +188,16 @@ graph TB
 
 #### ⚙️ **Backend Infrastructure**
 - **Framework:** Spring Boot 2.7.18 enterprise framework
-- **Language:** Java 17+ with modern features
-- **Security:** Spring Security 6.1+ with JWT authentication
-- **Database:** H2 (dev) / MySQL 8.0+ (prod) / PostgreSQL 15+
-- **ORM:** JPA/Hibernate 6.2+ with advanced caching
-- **Build Tool:** Maven 3.6+ for dependency management
-- **API Style:** RESTful with comprehensive endpoints
-- **Caching:** Redis 7.0+ for performance optimization
-- **Messaging:** Apache Kafka 3.4+ for event streaming
+- **Language:** Java 17+ with modern language features
+- **Security:** Spring Security 5.7.5 with JWT authentication filter
+- **Authentication:** JWT 0.11.5 with BCrypt password encryption
+- **Database:** H2 2.1.214 (dev) / MySQL 8.0+ (prod)
+- **ORM:** JPA/Hibernate 2.7.5 with transaction management
+- **Build Tool:** Maven 3.8.6 for dependency management
+- **Validation:** Bean Validation 2.0 with @Valid annotations
+- **API Style:** RESTful with 30+ comprehensive endpoints
+- **Error Handling:** Global exception handler with structured responses
+- **Logging:** SLF4J with comprehensive security event tracking
 
 </td>
 </tr>
@@ -312,14 +317,19 @@ graph TB
 - **Professional Design**: Glassmorphism effects with backdrop blur
 - **Responsive Layout**: Perfect scaling across all device sizes
 
-### 🔐 **Enhanced Authentication System**
-- **Glass UI Design**: Beautiful transparent input fields with proper visibility
-- **JWT Security**: Industry-standard token-based authentication
-- **Role Management**: Three-tier access control (Admin/Manager/Customer)
+### 🔐 **Enterprise-Grade Authentication System**
+- **User Self-Registration**: Complete signup flow with real-time validation
+- **Password Strength Validation**: 8+ chars with uppercase, lowercase, and numbers
+- **BCrypt Encryption**: Industry-standard password hashing with salt
+- **JWT Security**: Stateless token-based authentication with configurable expiration
+- **JWT Authentication Filter**: Validates tokens on every request
+- **Role Management**: Multi-tier access control (Admin/Customer)
 - **Session Management**: Secure login/logout with token validation
 - **Protected Routes**: Frontend route protection based on user roles
-- **Demo Accounts**: One-click demo access for all user types
-- **Animated Login**: Smooth transitions and loading states
+- **Demo Accounts**: One-click demo access for testing
+- **Glass UI Design**: Beautiful 3D animated login/signup pages
+- **Email Uniqueness**: Prevents duplicate accounts
+- **Username Validation**: Alphanumeric with underscore support
 
 ### 📊 **Analytics Dashboard**
 - **3D Visualizations**: Floating cube animations in the background
@@ -468,12 +478,19 @@ spring.datasource.password=your_password
 ### 🔐 **Authentication Endpoints**
 
 <table>
-<tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Access</th></tr>
-<tr><td><code>POST</code></td><td><code>/api/auth/login</code></td><td>🔑 User login with credentials</td><td>Public</td></tr>
-<tr><td><code>POST</code></td><td><code>/api/auth/logout</code></td><td>🚪 User logout and token invalidation</td><td>Authenticated</td></tr>
-<tr><td><code>GET</code></td><td><code>/api/auth/validate</code></td><td>✅ Token validation and refresh</td><td>Authenticated</td></tr>
-<tr><td><code>POST</code></td><td><code>/api/auth/register</code></td><td>📄 New user registration</td><td>Public</td></tr>
+<tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Request Body</th><th>Access</th></tr>
+<tr><td><code>POST</code></td><td><code>/api/auth/login</code></td><td>🔑 User login with credentials</td><td><code>{username, password}</code></td><td>Public</td></tr>
+<tr><td><code>POST</code></td><td><code>/api/auth/register</code></td><td>📝 New user self-registration</td><td><code>{username, email, password, firstName, lastName, phone?}</code></td><td>Public</td></tr>
+<tr><td><code>POST</code></td><td><code>/api/auth/validate</code></td><td>✅ Token validation and user info</td><td><code>Authorization: Bearer {token}</code></td><td>Authenticated</td></tr>
+<tr><td><code>POST</code></td><td><code>/api/auth/logout</code></td><td>🚪 User logout (client-side)</td><td>None</td><td>Authenticated</td></tr>
 </table>
+
+**Registration Validation Rules:**
+- Username: 3-50 chars, alphanumeric + underscore only, unique
+- Email: Valid format, unique across system
+- Password: Min 8 chars, must contain uppercase, lowercase, and number
+- Phone: Optional, 10 digits if provided
+- Auto-assigned role: CUSTOMER
 
 ### 📊 **Dashboard Endpoints**
 

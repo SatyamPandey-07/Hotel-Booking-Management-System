@@ -113,12 +113,13 @@ function LandingPage() {
       icon: <DevicePhoneMobileIcon className="w-8 h-8" />,
       color: 'from-blue-500 to-purple-600',
       technologies: [
-        { name: 'React 18', description: 'Modern UI framework with hooks and functional components', version: 'v18.2.0' },
-        { name: 'React Router', description: 'Declarative routing for React applications', version: 'v6.3.0' },
-        { name: 'Framer Motion', description: 'Production-ready motion library for animations', version: 'v12.23.22' },
-        { name: 'Three.js', description: '3D graphics library for immersive background effects', version: 'v0.180.0' },
-        { name: 'Heroicons', description: 'Beautiful hand-crafted SVG icons by Tailwind team', version: 'v2.2.0' },
-        { name: 'Custom CSS', description: 'CSS Variables with responsive design patterns', version: 'Latest' }
+        { name: 'React 18', description: 'Modern UI framework with hooks and concurrent features', version: 'v18.2.0' },
+        { name: 'React Router', description: 'Declarative routing for single-page applications', version: 'v6.8.0' },
+        { name: 'Framer Motion', description: 'Production-ready motion library with smooth animations', version: 'v10.16.0' },
+        { name: 'Three.js', description: '3D graphics library for immersive background effects', version: 'v0.150.0' },
+        { name: 'Heroicons', description: 'Beautiful hand-crafted SVG icons by Tailwind team', version: 'v2.0.0' },
+        { name: 'Axios', description: 'Promise-based HTTP client for API communication', version: 'v0.27.2' },
+        { name: 'Context API', description: 'Global state management for authentication and user data', version: 'Built-in' }
       ]
     },
     {
@@ -127,11 +128,12 @@ function LandingPage() {
       color: 'from-green-500 to-teal-600',
       technologies: [
         { name: 'Spring Boot', description: 'Enterprise Java framework with auto-configuration', version: 'v2.7.18' },
-        { name: 'Spring Security', description: 'Comprehensive security framework for authentication', version: 'v2.7.18' },
-        { name: 'Spring JDBC', description: 'Database connectivity and transaction management', version: 'v2.7.18' },
-        { name: 'Java 11', description: 'Long-term support Java version with modern features', version: 'v11' },
-        { name: 'Maven', description: 'Dependency management and build automation', version: 'Latest' },
-        { name: 'Spring Actuator', description: 'Production-ready monitoring and management', version: 'v2.7.18' }
+        { name: 'Spring Security', description: 'Comprehensive security with JWT authentication filter', version: 'v5.7.5' },
+        { name: 'Spring JDBC', description: 'Database connectivity and transaction management', version: 'v5.3.24' },
+        { name: 'Java 17', description: 'LTS version with modern language features', version: 'v17' },
+        { name: 'Maven', description: 'Dependency management and build automation', version: 'v3.8.6' },
+        { name: 'BCrypt', description: 'Password hashing with strong encryption algorithm', version: 'v5.0' },
+        { name: 'JWT (JJWT)', description: 'JSON Web Tokens for stateless authentication', version: 'v0.11.5' }
       ]
     },
     {
@@ -139,22 +141,25 @@ function LandingPage() {
       icon: <CloudIcon className="w-8 h-8" />,
       color: 'from-orange-500 to-red-600',
       technologies: [
-        { name: 'H2 Database', description: 'In-memory database for development and testing', version: 'Latest' },
+        { name: 'H2 Database', description: 'In-memory database for development with zero config', version: 'v2.1.214' },
         { name: 'MySQL Support', description: 'Production-ready relational database connector', version: 'v8.0+' },
+        { name: 'JPA/Hibernate', description: 'Object-relational mapping for database operations', version: 'v2.7.5' },
         { name: 'JDBC', description: 'Java Database Connectivity for SQL operations', version: 'Latest' },
-        { name: 'SQL Scripts', description: 'Database initialization and sample data loading', version: 'Latest' }
+        { name: 'SQL Scripts', description: 'Automated database initialization and sample data', version: 'Latest' }
       ]
     },
     {
-      category: 'Security & Communication',
+      category: 'Security & Features',
       icon: <ShieldCheckIcon className="w-8 h-8" />,
       color: 'from-purple-500 to-pink-600',
       technologies: [
-        { name: 'JWT Authentication', description: 'Stateless token-based authentication system', version: 'v0.11.5' },
-        { name: 'Axios', description: 'Promise-based HTTP client for API communication', version: 'v0.27.2' },
-        { name: 'CORS Configuration', description: 'Cross-origin resource sharing setup', version: 'Latest' },
-        { name: 'Form Validation', description: 'Client-side and server-side data validation', version: 'Built-in' },
-        { name: 'React Hot Toast', description: 'Beautiful toast notifications for user feedback', version: 'v2.6.0' }
+        { name: 'JWT Authentication', description: 'Stateless token-based auth with role management', version: 'v0.11.5' },
+        { name: 'BCrypt Encryption', description: 'Password hashing with salt and strong algorithm', version: 'Spring' },
+        { name: 'User Registration', description: 'Self-service signup with password strength validation', version: 'Custom' },
+        { name: 'Role-Based Access', description: 'Multi-level authorization (Admin/Customer)', version: 'Custom' },
+        { name: 'Exception Handling', description: 'Global error handler with structured responses', version: 'Custom' },
+        { name: 'CORS Configuration', description: 'Cross-origin resource sharing for API security', version: 'Spring' },
+        { name: 'Form Validation', description: 'Client and server-side data validation', version: 'Bean Validation' }
       ]
     }
   ];
