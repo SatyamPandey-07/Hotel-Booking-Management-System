@@ -14,7 +14,7 @@
     <name>hotel-booking-system</name>
     <description>Hotel Booking Management System</description>
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
     <dependencies>
 

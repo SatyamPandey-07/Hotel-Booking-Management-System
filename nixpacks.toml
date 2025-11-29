@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["...", "jdk17"]
+
+[phases.build]
+cmds = ["mvn clean package -DskipTests -Dmaven.test.skip=true"]
+
+[start]
+cmd = "java -Dserver.port=$PORT -jar target/hotel-booking-system-0.0.1-SNAPSHOT.jar"
