@@ -138,6 +138,14 @@ npm install && npm start
 # 💾 Database: http://localhost:8080/h2-console
 ```
 
+### ☁️ **Deployed on Railway**
+
+**Live Application**: Visit the [deployed application](https://railway.app)
+- **Backend API**: Production-ready Spring Boot backend with H2 database
+- **JWT Authentication**: Secure token-based authentication
+- **Auto-scaling**: Automatic resource scaling based on demand
+- **Zero Configuration**: Deployed directly from GitHub repository
+
 ### 🔑 **Demo Accounts**
 
 | Role | Username | Password | Access Level |
@@ -209,24 +217,25 @@ graph TB
 <tr>
 <td width="50%">
 
-#### ☁️ **Cloud Platform**
-- **Compute:** AWS EC2/ECS for scalable deployment
-- **Database:** AWS RDS for managed database service
-- **CDN:** CloudFront for global content delivery
-- **Storage:** AWS S3 for static assets and backups
-- **Monitoring:** AWS CloudWatch for comprehensive observability
-- **Security:** SSL/TLS 1.3 encryption and OWASP guidelines
+#### ☁️ **Cloud Platform (Railway)**
+- **Deployment:** Railway.app for zero-config deployment
+- **Database:** H2 in-memory (development) with MySQL ready for production
+- **Auto-scaling:** Dynamic resource allocation
+- **GitHub Integration:** Automatic deployment from main branch
+- **Environment Variables:** Secure configuration management
+- **SSL/TLS:** Automatic HTTPS encryption
+- **Monitoring:** Built-in logging and metrics
 
 </td>
 <td width="50%">
 
 #### 🛠️ **Development Tools**
-- **Containerization:** Docker 24.0+ for consistent deployments
-- **Orchestration:** Kubernetes 1.27+ for production workloads
-- **CI/CD:** GitHub Actions for automated pipelines
-- **Logging:** ELK Stack (Elasticsearch, Logstash, Kibana) 8.8+
-- **API Testing:** Postman collections for comprehensive testing
+- **CI/CD:** GitHub repository with automated Railway deployments
+- **Build Tool:** Maven 3.9.6 for dependency management
+- **API Testing:** Swagger UI at `/swagger-ui.html`
 - **Version Control:** Git with feature branch workflow
+- **Logging:** Logstash Logback Encoder 7.3 with JSON format
+- **Testing:** JUnit 5 + Mockito with 22 test methods
 
 </td>
 </tr>
@@ -739,7 +748,7 @@ netstat -ano | findstr :3000
 
 ---
 
-## 🎯 **Production-Ready Improvements (v2.5.0)**
+## 🎯 **Production-Ready Features (v2.5.0)**
 
 ### ✅ **Implemented Enterprise Features**
 
@@ -770,17 +779,26 @@ netstat -ano | findstr :3000
 </tr>
 </table>
 
-### 🔄 **Filter Chain Architecture**
+### 🔄 **Security Filter Chain**
 The security filter chain processes requests in this order:
 1. **RequestLoggingFilter**: Logs all HTTP requests with requestId, method, URI, clientIP
 2. **RateLimitFilter**: Enforces 100 requests/min limit per IP address
 3. **JwtAuthenticationFilter**: Validates JWT tokens and sets authentication context
 4. **Spring Security Filters**: Authorization, session management, CSRF protection
 
-### 📊 **Actuator Endpoints**
+### 📊 **Monitoring Endpoints**
 - **Health**: `/actuator/health` - Application health status
 - **Info**: `/actuator/info` - Application metadata
 - **Metrics**: `/actuator/metrics` - Performance metrics
+- **Swagger UI**: `/swagger-ui.html` - Interactive API documentation
+
+### ☁️ **Railway Deployment**
+- **Platform**: Railway.app for instant deployment
+- **Database**: H2 in-memory (auto-configured, no setup required)
+- **Build**: Automatic Maven build from GitHub repository
+- **Scaling**: Auto-scaling based on traffic
+- **SSL**: Automatic HTTPS with Railway's SSL certificates
+- **Environment**: JWT_SECRET configured via Railway environment variables
 
 ### 🚀 **Future Enhancements**
 
@@ -812,10 +830,11 @@ The security filter chain processes requests in this order:
 </table>
 
 ### 🏆 **Performance Optimizations**
-- **Caching Layer**: Redis integration for frequently accessed data
-- **Database Optimization**: Query optimization with comprehensive indexing
-- **CDN Integration**: Static asset delivery optimization
-- **Load Balancing**: Multi-instance deployment support
+- **Database Optimization**: 15+ indexes for faster query execution
+- **Connection Pooling**: HikariCP for efficient database connections
+- **Code Splitting**: React lazy loading for reduced initial bundle size
+- **Compression**: GZIP compression for API responses
+- **Rate Limiting**: Request throttling to prevent abuse
 
 ---
 
