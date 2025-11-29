@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -6,8 +6,8 @@ import { Button, Input, Alert } from './ui';
 import { UserIcon, LockClosedIcon } from '@heroicons/react/24/outline';
 import * as THREE from 'three';
 
-// 3D Background matching landing page theme
-function LoginBackground() {
+// 3D Background matching landing page theme - Memoized for performance
+const LoginBackground = memo(() => {
   const mountRef = useRef(null);
   
   useEffect(() => {
@@ -96,7 +96,7 @@ function LoginBackground() {
       }}
     />
   );
-}
+});
 
 function Login() {
   const [credentials, setCredentials] = useState({

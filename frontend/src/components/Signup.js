@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import * as THREE from 'three';
 import '../index.css';
 
-// 3D Background matching login page theme
-function SignupBackground() {
+// 3D Background matching login page theme - Memoized for performance
+const SignupBackground = memo(() => {
   const mountRef = useRef(null);
   
   useEffect(() => {
@@ -95,7 +95,7 @@ function SignupBackground() {
       }}
     />
   );
-}
+});
 
 const Signup = () => {
   const navigate = useNavigate();

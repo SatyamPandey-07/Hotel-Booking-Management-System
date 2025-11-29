@@ -80,6 +80,58 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DuplicateUserException.class)
+    public ResponseEntity<?> handleDuplicateUserException(DuplicateUserException ex, WebRequest request) {
+        logger.error("Duplicate user error: {}", ex.getMessage());
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("error", "DUPLICATE_USER");
+        body.put("status", HttpStatus.CONFLICT.value());
+        
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<?> handleInvalidCredentialsException(InvalidCredentialsException ex, WebRequest request) {
+        logger.error("Invalid credentials: {}", ex.getMessage());
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("error", "INVALID_CREDENTIALS");
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InactiveAccountException.class)
+    public ResponseEntity<?> handleInactiveAccountException(InactiveAccountException ex, WebRequest request) {
+        logger.error("Inactive account: {}", ex.getMessage());
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("error", "INACTIVE_ACCOUNT");
+        body.put("status", HttpStatus.FORBIDDEN.value());
+        
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(InvalidBookingException.class)
+    public ResponseEntity<?> handleInvalidBookingException(InvalidBookingException ex, WebRequest request) {
+        logger.error("Invalid booking: {}", ex.getMessage());
+        
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("message", ex.getMessage());
+        body.put("error", "INVALID_BOOKING");
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
         logger.error("Unexpected error occurred: {}", ex.getMessage(), ex);

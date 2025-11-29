@@ -35,7 +35,7 @@ public class AuthService {
             
             if (user == null) {
                 logger.warn("Login attempt for non-existent user: {}", loginRequest.getUsername());
-                return new LoginResponse(null, null, null, null, null, null, "Invalid username or password");
+                throw new com.example.hotelbooking.exception.InvalidCredentialsException("Invalid username or password");
             }
             
             // Use BCrypt to verify password (supports both plain and hashed for migration)
@@ -53,12 +53,12 @@ public class AuthService {
             
             if (!passwordMatches) {
                 logger.warn("Failed login attempt for user: {}", loginRequest.getUsername());
-                return new LoginResponse(null, null, null, null, null, null, "Invalid username or password");
+                throw new com.example.hotelbooking.exception.InvalidCredentialsException("Invalid username or password");
             }
             
             if (!user.isActive()) {
                 logger.warn("Login attempt for deactivated user: {}", loginRequest.getUsername());
-                return new LoginResponse(null, null, null, null, null, null, "Account is deactivated");
+                throw new com.example.hotelbooking.exception.InactiveAccountException("Account is deactivated");
             }
             
             // Generate JWT token
@@ -115,14 +115,14 @@ public class AuthService {
             User existingUser = userDAO.findByUsername(registerRequest.getUsername());
             if (existingUser != null) {
                 logger.warn("Registration attempt with existing username: {}", registerRequest.getUsername());
-                return new RegisterResponse(false, "Username already exists", null, null, null);
+                throw new com.example.hotelbooking.exception.DuplicateUserException("Username already exists");
             }
             
             // Check if email already exists
             User existingEmail = userDAO.findByEmail(registerRequest.getEmail());
             if (existingEmail != null) {
                 logger.warn("Registration attempt with existing email: {}", registerRequest.getEmail());
-                return new RegisterResponse(false, "Email already exists", null, null, null);
+                throw new com.example.hotelbooking.exception.DuplicateUserException("Email already exists");
             }
             
             // Create new user

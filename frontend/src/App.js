@@ -1,18 +1,21 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import ThemeWrapper from './components/ThemeWrapper';
-import Customers from './components/Customers';
-import Hotels from './components/Hotels';
-import Bookings from './components/Bookings';
-import Rooms from './components/Rooms';
-import Dashboard from './components/Dashboard';
-import Home from './components/Home';
-import Login from './components/Login';
-import Signup from './components/Signup';
-import LandingPage from './components/LandingPage';
-import Profile from './components/Profile';
-import MyBookings from './components/MyBookings';
+import { LoadingSpinner } from './components/ui';
+
+// Lazy load components
+const ThemeWrapper = lazy(() => import('./components/ThemeWrapper'));
+const Customers = lazy(() => import('./components/Customers'));
+const Hotels = lazy(() => import('./components/Hotels'));
+const Bookings = lazy(() => import('./components/Bookings'));
+const Rooms = lazy(() => import('./components/Rooms'));
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const Home = lazy(() => import('./components/Home'));
+const Login = lazy(() => import('./components/Login'));
+const Signup = lazy(() => import('./components/Signup'));
+const LandingPage = lazy(() => import('./components/LandingPage'));
+const Profile = lazy(() => import('./components/Profile'));
+const MyBookings = lazy(() => import('./components/MyBookings'));
 
 function Navigation() {
   const location = useLocation();
@@ -185,66 +188,78 @@ function AppContent() {
   }
   
   return (
-    <ThemeWrapper>
-      <div className="App">
-        <Navigation />
-        
-        <div className="container">
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            
-            {/* Common routes for all authenticated users */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } />
-            
-            {/* Admin-only routes */}
-            <Route path="/customers" element={
-              <ProtectedRoute allowedRoles={['ADMIN']}>
-                <Customers />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/bookings" element={
-              <ProtectedRoute allowedRoles={['ADMIN']}>
-                <Bookings />
-              </ProtectedRoute>
-            } />
-            
-            {/* Hotels and Rooms - accessible to all but with different views */}
-            <Route path="/hotels" element={
-              <ProtectedRoute>
-                <Hotels />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/rooms" element={
-              <ProtectedRoute>
-                <Rooms />
-              </ProtectedRoute>
-            } />
-            
-            {/* User/Customer-only routes */}
-            <Route path="/my-bookings" element={
-              <ProtectedRoute allowedRoles={['CUSTOMER', 'USER']}>
-                <MyBookings />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/profile" element={
-              <ProtectedRoute allowedRoles={['CUSTOMER', 'USER']}>
-                <Profile />
-              </ProtectedRoute>
-            } />
-            
-            <Route path="/home" element={<Home />} />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </div>
+    <Suspense fallback={
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}>
+        <LoadingSpinner />
       </div>
-    </ThemeWrapper>
+    }>
+      <ThemeWrapper>
+        <div className="App">
+          <Navigation />
+          
+          <div className="container">
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              
+              {/* Common routes for all authenticated users */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
+              
+              {/* Admin-only routes */}
+              <Route path="/customers" element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <Customers />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/bookings" element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <Bookings />
+                </ProtectedRoute>
+              } />
+              
+              {/* Hotels and Rooms - accessible to all but with different views */}
+              <Route path="/hotels" element={
+                <ProtectedRoute>
+                  <Hotels />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/rooms" element={
+                <ProtectedRoute>
+                  <Rooms />
+                </ProtectedRoute>
+              } />
+              
+              {/* User/Customer-only routes */}
+              <Route path="/my-bookings" element={
+                <ProtectedRoute allowedRoles={['CUSTOMER', 'USER']}>
+                  <MyBookings />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/profile" element={
+                <ProtectedRoute allowedRoles={['CUSTOMER', 'USER']}>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              
+              <Route path="/home" element={<Home />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </div>
+        </div>
+      </ThemeWrapper>
+    </Suspense>
   );
 }
 
