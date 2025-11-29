@@ -65,6 +65,9 @@ frontend/dist/
 .env.test.local
 .env.production.local
 
+# Production environment file with secrets
+.env.production
+
 # OS generated files
 .DS_Store
 .DS_Store?
